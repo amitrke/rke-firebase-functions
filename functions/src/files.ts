@@ -4,8 +4,8 @@ import * as admin from "firebase-admin";
 export const listAndInsertFiles = functions
   .region("us-east1")
   .pubsub
-  .schedule("every 1 weeks")
-  .onRun(async (context) => {
+  .schedule("every 2 hours")
+  .onRun(async () => {
     // Get the storage bucket reference
     const bucket = admin.storage().bucket();
 
