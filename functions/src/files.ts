@@ -43,43 +43,31 @@ export const listAndInsertFiles = functions
 
     const processedFiles = [];
     for (const file of files) {
-      functions.logger.info(
-        "Processing file", file.name);
-      functions.logger.info(
-        "md5 file", file.metadata.md5Hash);
-      const base64md5 = Buffer.from(file.metadata.md5Hash, "base64").toString("hex");
-      functions.logger.info(
-        "base64md5", base64md5);
-      functions.logger.info(
-        "time created", file.metadata.timeCreated);
       const imageDetails = parseFilePath(file.name);
+      const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
       processedFiles.push({
         ...imageDetails,
+        id,
+        timeCreated: file.metadata.timeCreated,
       });
-
-      functions.logger.info(
-        "imageDetails", JSON.stringify(imageDetails));
     }
 
-    // Map the file metadata to an array of file names
-    const fileNames = files.map((file) => file.name);
-
     // Get a Firestore reference to the "files" collection
-    // const filesCollection = admin.firestore().collection("files");
+    const filesCollection = admin.firestore().collection("files");
 
-    // // Iterate over the file names and insert them into the Firestore
-    // // collection if they don't already exist
-    // const insertions = fileNames.map(async (fileName) => {
-    //   const docRef = filesCollection.doc(fileName);
-    //   const doc = await docRef.get();
-    //   if (!doc.exists) {
-    //     await docRef.set({});
-    //   }
-    // });
+    // Iterate over the file names and insert them into the Firestore
+    // collection if they don't already exist
+    const insertions = processedFiles.map(async (file) => {
+      const docRef = filesCollection.doc(file.id);
+      const doc = await docRef.get();
+      if (!doc.exists) {
+        await docRef.set(file);
+      }
+    });
 
     // // Wait for all insertions to complete
-    // await Promise.all(insertions);
+    await Promise.all(insertions);
 
     // Return the list of file names
-    return fileNames;
+    return processedFiles;
   });
