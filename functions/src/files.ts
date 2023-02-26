@@ -12,9 +12,11 @@ const imageSizeMap = {
 // Get the user id and file name
 export const parseFilePath = (filePath: string) => {
   const pathArray = filePath.split("/");
-  const fileName = pathArray[pathArray.length - 1];
+  const fileNameWithDim = pathArray[pathArray.length - 1];
   const userId = pathArray[1];
-  const fileNameArray = fileName.split("_");
+  const fileNameArray = fileNameWithDim.split("_");
+  const fileNameExtArray = fileNameWithDim.split(".");
+  const fileName = fileNameArray[0] + "." + fileNameExtArray[1];
   const imageDimensionsStr = fileNameArray[fileNameArray.length - 1];
   const imageDimensions = imageDimensionsStr.split(".")[0];
   let imageSize = "";
@@ -70,4 +72,109 @@ export const listAndInsertFiles = functions
 
     // Return the list of file names
     return processedFiles;
+  });
+
+export const parsePosts = (posts: any, userFiles:any) => {
+  for (const post of posts) {
+    const postFiles:Array<string> = post.data().images;
+    functions.logger.info("postFiles", JSON.stringify(postFiles));
+    const userId = post.data().userId;
+    functions.logger.info("userId", userId);
+    if (!userFiles[userId]) {
+      functions.logger.info("map missing userId", userId);
+      userFiles[userId] = postFiles;
+    } else {
+      functions.logger.info("map has userId", userId);
+      const userFileList = userFiles[userId];
+      if (!userFileList) {
+        functions.logger.info("userFileList is missing");
+        userFiles[userId] = postFiles;
+      } else {
+        functions.logger.info("userFileList has items");
+        userFileList.push(...postFiles);
+      }
+    }
+    functions.logger.info(
+      "userFiles interim", JSON.stringify(userFiles));
+  }
+};
+
+export const fileBeingUsed = (file: any, userFiles:any) => {
+  if (userFiles[file.userId] &&
+    userFiles[file.userId].includes(file.fileName)) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
+export const checkFilesBeingUsedFn = functions
+  .region("us-east1")
+  .pubsub
+  .schedule("every 24 hours")
+  .onRun(async () => {
+    const userFiles:any = {};
+
+    const postsCollection = admin.firestore().collection("posts");
+    const posts = await postsCollection.get();
+
+    for (const post of posts.docs) {
+      const postFiles:Array<string> = post.data().images;
+      const userId = post.data().userId;
+      if (!userFiles[userId]) {
+        userFiles[userId] = postFiles;
+      } else {
+        const userFileList = userFiles[userId];
+        if (!userFileList) {
+          userFiles[userId] = postFiles;
+        } else {
+          userFileList.push(...postFiles);
+        }
+      }
+    }
+
+    const albumsCollection = admin.firestore().collection("albums");
+    const albums = await albumsCollection.get();
+
+    for (const album of albums.docs) {
+      const albumFiles:Array<string> = album.data().images;
+      const userId = album.data().userId;
+      if (!userFiles[userId]) {
+        userFiles[userId] = albumFiles;
+      } else {
+        const userFileList = userFiles[userId];
+        if (!userFileList) {
+          userFiles[userId] = albumFiles;
+        } else {
+          userFileList.push(...albumFiles);
+        }
+      }
+    }
+
+    functions.logger.info(
+      "userFiles", JSON.stringify(userFiles));
+
+    const filesCollection = admin.firestore().collection("files");
+    const files = await filesCollection.get();
+
+    const processedFiles: any[] = [];
+    for (const file of files.docs) {
+      const imageDetails = file.data();
+      imageDetails.isBeingUsed = fileBeingUsed(imageDetails, userFiles);
+      functions.logger.info(
+        "imageDetails", JSON.stringify(imageDetails));
+      processedFiles.push(imageDetails);
+    }
+
+    // Iterate over the file names and insert them into the Firestore
+    // collection if they don't already exist
+    const updates = processedFiles.map(async (file) => {
+      const docRef = filesCollection.doc(file.id);
+      await docRef.set(file);
+    });
+
+    // // Wait for all insertions to complete
+    await Promise.all(updates);
+
+    return userFiles;
   });
