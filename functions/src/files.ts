@@ -1,5 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import {Storage} from "@google-cloud/storage";
+
+const storage = new Storage();
 
 const imageSizeMap = {
   "200x200": "s",
@@ -21,7 +24,7 @@ export const parseFilePath = (filePath: string) => {
   const imageDimensions = imageDimensionsStr.split(".")[0];
   let imageSize = "";
   if (imageDimensions !== "200x200" && imageDimensions !== "680x680" &&
-      imageDimensions !== "1920x1080") {
+    imageDimensions !== "1920x1080") {
     imageSize = "";
   } else {
     imageSize = imageSizeMap[imageDimensions];
@@ -74,9 +77,9 @@ export const listAndInsertFiles = functions
     return processedFiles;
   });
 
-export const parsePosts = (posts: any, userFiles:any) => {
+export const parsePosts = (posts: any, userFiles: any) => {
   for (const post of posts) {
-    const postFiles:Array<string> = post.data().images;
+    const postFiles: Array<string> = post.data().images;
     functions.logger.info("postFiles", JSON.stringify(postFiles));
     const userId = post.data().userId;
     functions.logger.info("userId", userId);
@@ -99,27 +102,27 @@ export const parsePosts = (posts: any, userFiles:any) => {
   }
 };
 
-export const fileBeingUsed = (file: any, userFiles:any) => {
+export const fileBeingUsed = (file: any, userFiles: any) => {
   if (userFiles[file.userId] &&
     userFiles[file.userId].includes(file.fileName)) {
-      return true;
+    return true;
   } else {
-      return false;
+    return false;
   }
-}
+};
 
 export const checkFilesBeingUsedFn = functions
   .region("us-east1")
   .pubsub
   .schedule("every 24 hours")
   .onRun(async () => {
-    const userFiles:any = {};
+    const userFiles: any = {};
 
     const postsCollection = admin.firestore().collection("posts");
     const posts = await postsCollection.get();
 
     for (const post of posts.docs) {
-      const postFiles:Array<string> = post.data().images;
+      const postFiles: Array<string> = post.data().images;
       const userId = post.data().userId;
       if (!userFiles[userId]) {
         userFiles[userId] = postFiles;
@@ -137,7 +140,7 @@ export const checkFilesBeingUsedFn = functions
     const albums = await albumsCollection.get();
 
     for (const album of albums.docs) {
-      const albumFiles:Array<string> = album.data().images;
+      const albumFiles: Array<string> = album.data().images;
       const userId = album.data().userId;
       if (!userFiles[userId]) {
         userFiles[userId] = albumFiles;
@@ -177,4 +180,62 @@ export const checkFilesBeingUsedFn = functions
     await Promise.all(updates);
 
     return userFiles;
+  });
+
+export const deleteUnusedFilesFn = functions
+  .region("us-east1")
+  .pubsub
+  .schedule("every 24 hours")
+  .onRun(async () => {
+    const userFiles: any = {};
+
+    const filesCollection = admin.firestore().collection("files");
+    // Get all files that are not being used
+    const files = await filesCollection.where("isBeingUsed", "==", false).get();
+
+    // Delete files from storage
+    const bucket = admin.storage().bucket();
+    const deleteFiles = files.docs.map(async (file) => {
+      const imageDetails = file.data();
+      const fileName = imageDetails.fileName;
+      const userId = imageDetails.userId;
+      const imageSize = imageDetails.imageSize;
+      const filePath = `users/${userId}/${fileName}.${imageSize}.jpg`;
+      functions.logger.info("filePath", filePath);
+      await bucket.file(filePath).delete();
+    });
+
+    // Delete files from firestore
+    const deleteFirestoreFiles = files.docs.map(async (file) => {
+      const imageDetails = file.data();
+      const id = imageDetails.id;
+      await filesCollection.doc(id).delete();
+    });
+
+    await Promise.all(deleteFiles);
+    await Promise.all(deleteFirestoreFiles);
+
+    return userFiles;
+  });
+
+export const onFileCreateFn = functions
+  .region("us-east1")
+  .storage.object().onFinalize(async (object) => {
+    const fileBucket = object.bucket;
+    if (!object.name) return;
+    const filePath = object.name;
+    const bucket = storage.bucket(fileBucket);
+    const file = bucket.file(filePath);
+
+    const [metadata] = await file.getMetadata();
+
+    console.log(`File ${metadata.name} uploaded.`);
+  });
+
+export const onFileDeleteFn = functions
+  .region("us-east1")
+  .storage.object().onDelete(async (object) => {
+    if (!object.name) return;
+    const filePath: string = object.name;
+    console.log(`File ${filePath} deleted.`);
   });
