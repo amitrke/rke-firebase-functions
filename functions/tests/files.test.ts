@@ -1,4 +1,4 @@
-import { fileBeingUsed, parseFilePath } from "../src/files"
+import { fileBeingUsed, parseDate, parseFilePath } from "../src/files"
 
 describe("files", () => {
     it("parsePosts happy path", () => {
@@ -17,5 +17,36 @@ describe("files", () => {
             "imageDimensions": "680x680"
         };
         expect(parseFilePath(filePath)).toEqual(expected);
+    });
+
+    //Test parseFilePath
+    it("parseFilePath happy path 2", () => {
+        const filePath = "users/MvOomgxG3GaGR7dWvqnsz1G5Jk23/images/20210730_203540_1920x1080.jpg";
+        const expected = {
+            "userId": "MvOomgxG3GaGR7dWvqnsz1G5Jk23",
+            "fileName": "20210730_203540.jpg",
+            "imageSize": "l",
+            "imageDimensions": "1920x1080"
+        };
+        expect(parseFilePath(filePath)).toEqual(expected);
+    });
+    
+    //Test parseFilePath
+    it("parseFilePath happy path 2", () => {
+        const filePath = "users/MvOomgxG3GaGR7dWvqnsz1G5Jk23/images/sample_1920×1280_1920x1080.jpeg";
+        const expected = {
+            "userId": "MvOomgxG3GaGR7dWvqnsz1G5Jk23",
+            "fileName": "sample_1920×1280.jpeg",
+            "imageSize": "l",
+            "imageDimensions": "1920x1080"
+        };
+        expect(parseFilePath(filePath)).toEqual(expected);
+    });
+    
+    //Test parseDate
+    it("parseDate happy path", () => {
+        const date = "2022-08-30T21:25:28.984Z";
+        const expected = 1661894728000;
+        expect(parseDate(date)).toEqual(expected);
     });
 });

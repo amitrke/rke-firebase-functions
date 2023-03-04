@@ -18,10 +18,11 @@ export const parseFilePath = (filePath: string) => {
   const fileNameWithDim = pathArray[pathArray.length - 1];
   const userId = pathArray[1];
   const fileNameArray = fileNameWithDim.split("_");
-  const fileNameExtArray = fileNameWithDim.split(".");
-  const fileName = fileNameArray[0] + "." + fileNameExtArray[1];
-  const imageDimensionsStr = fileNameArray[fileNameArray.length - 1];
-  const imageDimensions = imageDimensionsStr.split(".")[0];
+  const dimWithExt = fileNameArray.pop();
+  if (!dimWithExt) return;
+  const fileNameExtArray = dimWithExt.split(".");
+  const fileName = fileNameArray.join("_") + "." + fileNameExtArray[1];
+  const imageDimensions = dimWithExt.split(".")[0];
   let imageSize = "";
   if (imageDimensions !== "200x200" && imageDimensions !== "680x680" &&
     imageDimensions !== "1920x1080") {
@@ -33,10 +34,33 @@ export const parseFilePath = (filePath: string) => {
   return {userId, fileName, imageSize, imageDimensions};
 };
 
+// Parse date format 2022-09-11T21:09:48.568Z to timestamp
+export const parseDate = (date: string) => {
+  const dateArray = date.split("T");
+  const dateArray2 = dateArray[0].split("-");
+  const dateArray3 = dateArray[1].split(":");
+  const dateArray4 = dateArray3[2].split(".");
+  const year = dateArray2[0];
+  const month = dateArray2[1];
+  const day = dateArray2[2];
+  const hour = dateArray3[0];
+  const minute = dateArray3[1];
+  const second = dateArray4[0];
+  const timestamp = Date.UTC(
+    parseInt(year),
+    parseInt(month) - 1,
+    parseInt(day),
+    parseInt(hour),
+    parseInt(minute),
+    parseInt(second),
+  );
+  return timestamp;
+};
+
 export const listAndInsertFiles = functions
   .region("us-east1")
   .pubsub
-  .schedule("every 24 hours")
+  .schedule("every 168 hours") // 7 days
   .onRun(async () => {
     // Get the storage bucket reference
     const bucket = admin.storage().bucket();
@@ -49,11 +73,12 @@ export const listAndInsertFiles = functions
     const processedFiles = [];
     for (const file of files) {
       const imageDetails = parseFilePath(file.name);
+      if (!imageDetails) continue;
       const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
       processedFiles.push({
         ...imageDetails,
         id,
-        timeCreated: file.metadata.timeCreated,
+        timeCreated: parseDate(file.metadata.timeCreated),
       });
     }
 
@@ -114,7 +139,7 @@ export const fileBeingUsed = (file: any, userFiles: any) => {
 export const checkFilesBeingUsedFn = functions
   .region("us-east1")
   .pubsub
-  .schedule("every 24 hours")
+  .schedule("every 170 hours")
   .onRun(async () => {
     const userFiles: any = {};
 
@@ -185,7 +210,7 @@ export const checkFilesBeingUsedFn = functions
 export const deleteUnusedFilesFn = functions
   .region("us-east1")
   .pubsub
-  .schedule("every 24 hours")
+  .schedule("every 172 hours")
   .onRun(async () => {
     const userFiles: any = {};
 
@@ -218,6 +243,17 @@ export const deleteUnusedFilesFn = functions
     return userFiles;
   });
 
+const addFileToDb = async (filePath: string) => {
+  const imageDetails = parseFilePath(filePath);
+  if (!imageDetails) return;
+  const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
+  const filesCollection = admin.firestore().collection("files");
+  await filesCollection.doc(id).set({
+    ...imageDetails,
+    timeCreated: admin.firestore.FieldValue.serverTimestamp(),
+  });
+};
+
 export const onFileCreateFn = functions
   .region("us-east1")
   .storage.object().onFinalize(async (object) => {
@@ -230,7 +266,16 @@ export const onFileCreateFn = functions
     const [metadata] = await file.getMetadata();
 
     console.log(`File ${metadata.name} uploaded.`);
+    await addFileToDb(filePath);
   });
+
+const deleteFileFromDb = async (filePath: string) => {
+  const imageDetails = parseFilePath(filePath);
+  if (!imageDetails) return;
+  const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
+  const filesCollection = admin.firestore().collection("files");
+  await filesCollection.doc(id).delete();
+};
 
 export const onFileDeleteFn = functions
   .region("us-east1")
@@ -238,4 +283,23 @@ export const onFileDeleteFn = functions
     if (!object.name) return;
     const filePath: string = object.name;
     console.log(`File ${filePath} deleted.`);
+    await deleteFileFromDb(filePath);
   });
+
+// On post collection update, update the files collection
+// export const onPostUpdateFn = functions
+//   .region("us-east1")
+//   .firestore.document("posts/{postId}")
+//   .onUpdate(async (change, context) => {
+//     const postBefore = change.before.data();
+//     const postAfter = change.after.data();
+//     // const postBeforeFiles = postBefore.images;
+//     const postAfterFiles = postAfter.images;
+//     const filesCollection = admin.firestore().collection("files");
+//     const updates = postAfterFiles.map(async (file: any) => {
+//       const docRef = filesCollection.doc(file);
+//       await docRef.update({isBeingUsed: true});
+//     });
+//     await Promise.all(updates);
+//   }
+//   );
