@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {checkFilesBeingUsedFn, listAndInsertFiles, onFileCreateFn, onFileDeleteFn} from "./files";
+import {checkFilesBeingUsedFn, deleteUnusedFilesFn, listAndInsertFiles, onFileCreateFn, onFileDeleteFn} from "./files";
 import {updateWeatherUtil} from "./weather";
 import {updateNewsUtil} from "./news";
 
@@ -26,3 +26,4 @@ export const checkFilesBeingUsed = checkFilesBeingUsedFn;
 
 export const onFileCreate = onFileCreateFn;
 export const onFileDelete = onFileDeleteFn;
+export const deleteUnusedFiles = deleteUnusedFilesFn;

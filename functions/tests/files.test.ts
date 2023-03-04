@@ -1,4 +1,4 @@
-import { fileBeingUsed, parseDate, parseFilePath } from "../src/files"
+import { fileBeingUsed, getFilePath, parseDate, parseFilePath } from "../src/files"
 
 describe("files", () => {
     it("parsePosts happy path", () => {
@@ -48,5 +48,18 @@ describe("files", () => {
         const date = "2022-08-30T21:25:28.984Z";
         const expected = 1661894728000;
         expect(parseDate(date)).toEqual(expected);
+    });
+
+    //Test getFilePath
+    it("getFilePath happy path", () => {
+        const imageDetails = {
+            "fileName": "sample_1920×1280.jpeg",
+            "id": "MvOomgxG3GaGR7dWvqnsz1G5Jk23-sample_1920×1280_200x200.jpeg-s",
+            "imageSize": "s",
+            "imageDimensions": "200x200",
+            "userId": "MvOomgxG3GaGR7dWvqnsz1G5Jk23"
+        };
+        const expected = "users/MvOomgxG3GaGR7dWvqnsz1G5Jk23/images/sample_1920×1280_200x200.jpeg";
+        expect(getFilePath(imageDetails)).toEqual(expected);
     });
 });

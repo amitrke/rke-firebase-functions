@@ -207,6 +207,14 @@ export const checkFilesBeingUsedFn = functions
     return userFiles;
   });
 
+// imagDetails: {userId: string, fileName: string, imageSize: string} to fileName with path
+export const getFilePath = (imageDetails: any) => {
+  const {userId, fileName, imageDimensions} = imageDetails;
+  const fileNameArray = fileName.split(".");
+  const fileExtension = fileNameArray.pop();
+  return `users/${userId}/images/${fileNameArray[0]}_${imageDimensions}.${fileExtension}`;
+};
+
 export const deleteUnusedFilesFn = functions
   .region("us-east1")
   .pubsub
@@ -222,24 +230,12 @@ export const deleteUnusedFilesFn = functions
     const bucket = admin.storage().bucket();
     const deleteFiles = files.docs.map(async (file) => {
       const imageDetails = file.data();
-      const fileName = imageDetails.fileName;
-      const userId = imageDetails.userId;
-      const imageSize = imageDetails.imageSize;
-      const filePath = `users/${userId}/${fileName}.${imageSize}.jpg`;
+      const filePath = getFilePath(imageDetails);
       functions.logger.info("filePath", filePath);
       await bucket.file(filePath).delete();
     });
 
-    // Delete files from firestore
-    const deleteFirestoreFiles = files.docs.map(async (file) => {
-      const imageDetails = file.data();
-      const id = imageDetails.id;
-      await filesCollection.doc(id).delete();
-    });
-
     await Promise.all(deleteFiles);
-    await Promise.all(deleteFirestoreFiles);
-
     return userFiles;
   });
 
