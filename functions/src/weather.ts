@@ -8,7 +8,7 @@ export const updateWeatherUtil = async () => {
   const response = await fetch(
     "http://api.openweathermap.org/data/2.5/onecall?lat=29.8667"+
         `&lon=77.8833&appid=${WEATHER_APPID}`+
-        "&units=metric&exclude=minutely,hourly"
+        "&units=metric&exclude=minutely"
   );
   const body: Weather = <Weather> await response.json();
   const weatherCollection = admin.firestore().collection("weather");
