@@ -14,6 +14,11 @@ export const updateNewsUtil = async () => {
   if (body && body["articles"]) {
     const updates = body["articles"].map(async (article: any) => {
       article["apiSource"] = "newsapi";
+
+      article["expireAt"] = admin.firestore.Timestamp.fromMillis(
+        Date.now() + 1000 * 60 * 60 * 24 * 7 // 7 days from now
+      );
+
       const articleAsString = JSON.stringify(article);
       const hash = crypto.createHash("md5");
       hash.update(articleAsString);
