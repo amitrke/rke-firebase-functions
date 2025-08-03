@@ -10,14 +10,12 @@ admin.initializeApp();
 export const updateWeather = functions
   .region("us-east1")
   .pubsub.schedule("every 60 minutes").onRun(async () => {
-    // functions.logger.info(
-    //   "Function updateWhether triggered", {structuredData: true});
     await updateWeatherUtil();
   });
 
 export const updateNews = functions
   .region("us-east1")
-  .pubsub.schedule("every 4 hours").onRun(async () => {
+  .pubsub.schedule("every 12 hours").onRun(async () => {
     await updateNewsUtil();
   });
 
