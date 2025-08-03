@@ -1,6 +1,5 @@
 import {Weather} from "./model/types";
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
 import fetch from "node-fetch";
 
 export const updateWeatherUtil = async () => {
