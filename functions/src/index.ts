@@ -1,27 +1,28 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {checkFilesBeingUsedFn, deleteUnusedFilesFn, listAndInsertFiles, onFileCreateFn, onFileDeleteFn} from "./files";
+import {
+  checkFilesBeingUsedFn,
+  deleteUnusedFilesFn,
+  listAndInsertFiles,
+  onFileCreateFn,
+  onFileDeleteFn,
+} from "./files";
 import {updateWeatherUtil} from "./weather";
 import {updateNewsUtil} from "./news";
 import {updateNewsDataIOUtil} from "./newsdataio";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 
 admin.initializeApp();
 
-export const updateWeather = functions
-  .region("us-east1")
-  .pubsub.schedule("every 60 minutes").onRun(async () => {
-    await updateWeatherUtil();
-  });
+export const updateWeather = onSchedule("every 60 minutes", async () => {
+  await updateWeatherUtil();
+});
 
-export const updateNews = functions
-  .region("us-east1")
-  .pubsub.schedule("every 12 hours").onRun(async () => {
-    await updateNewsUtil();
-  });
+export const updateNews = onSchedule("every 12 hours", async () => {
+  await updateNewsUtil();
+});
 
-export const updateNewsFromNewsDataIO = functions
-  .region("us-east1")
-  .pubsub.schedule("every 12 hours").onRun(async () => {
+export const updateNewsFromNewsDataIO = onSchedule("every 12 hours",
+  async () => {
     await updateNewsDataIOUtil();
   });
 
