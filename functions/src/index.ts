@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 import {checkFilesBeingUsedFn, deleteUnusedFilesFn, listAndInsertFiles, onFileCreateFn, onFileDeleteFn} from "./files";
 import {updateWeatherUtil} from "./weather";
 import {updateNewsUtil} from "./news";
+import {updateNewsDataIOUtil} from "./newsdataio";
 
 admin.initializeApp();
 
@@ -18,6 +19,12 @@ export const updateNews = functions
   .region("us-east1")
   .pubsub.schedule("every 4 hours").onRun(async () => {
     await updateNewsUtil();
+  });
+
+export const updateNewsFromNewsDataIO = functions
+  .region("us-east1")
+  .pubsub.schedule("every 12 hours").onRun(async () => {
+    await updateNewsDataIOUtil();
   });
 
 export const updateFilesList = listAndInsertFiles;

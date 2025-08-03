@@ -1,4 +1,3 @@
-
 # RKE Firebase Functions
 
 This project contains a set of Firebase Functions for the RKE project, responsible for managing files, fetching weather data, and fetching news data.
@@ -48,6 +47,7 @@ The following Cloud Functions are defined in this project:
 
 - **`updateWeather`**: A scheduled function that runs every 60 minutes to fetch and update weather data.
 - **`updateNews`**: A scheduled function that runs every 4 hours to fetch and update news articles.
+- **`updateNewsFromNewsDataIO`**: A scheduled function that runs every 12 hours to fetch and update news articles from NewsData.io.
 - **`updateFilesList`**: A scheduled function that runs every 7 days to list all files in Cloud Storage and add their metadata to Firestore.
 - **`checkFilesBeingUsed`**: A scheduled function that runs every 170 hours to check which files are referenced in "posts" and "albums" and updates a `isBeingUsed` flag in Firestore.
 - **`deleteUnusedFiles`**: A scheduled function that runs every 172 hours to delete files from Cloud Storage that are marked as unused.
@@ -55,6 +55,8 @@ The following Cloud Functions are defined in this project:
 - **`onFileDelete`**: A function triggered by Cloud Storage when a file is deleted. It removes the file's metadata from Firestore.
 
 ## Deployment
+
+For detailed deployment instructions, please see the [Deployment Guide](DEPLOYMENT.md).
 
 To deploy the functions to Firebase, run the following command from the `functions` directory:
 
@@ -68,5 +70,35 @@ The following environment variables need to be set for the functions to work cor
 
 - `config.pass`: Your API key for the OpenWeatherMap API.
 - `config.newskey`: Your API key for the NewsAPI.
+- `config.newsdataiokey`: Your API key for NewsData.io.
 
 You can set these variables using the Firebase CLI as shown in the [Installation](#installation) section.
+
+## API Schemas
+
+### NewsAPI (`/v2/everything`)
+
+The response from the NewsAPI `everything` endpoint is a JSON object with the following structure:
+
+#### Root Object
+
+| Key            | Type    | Description                                             |
+| :------------- | :------ | :------------------------------------------------------ |
+| `status`       | String  | The status of the request. Can be `ok` or `error`.      |
+| `totalResults` | Integer | The total number of results found.                      |
+| `articles`     | Array   | An array of article objects.                            |
+
+#### Article Object
+
+Each object in the `articles` array has the following structure:
+
+| Key           | Type   | Description                                                                 |
+| :------------ | :----- | :-------------------------------------------------------------------------- |
+| `source`      | Object | The identifier and name of the source of the article.                       |
+| `author`      | String | The author of the article.                                                  |
+| `title`       | String | The headline or title of the article.                                       |
+| `description` | String | A short description or snippet from the article.                            |
+| `url`         | String | The direct URL to the article.                                              |
+| `urlToImage`  | String | The URL of an image associated with the article.                            |
+| `publishedAt` | String | The date and time the article was published, in ISO 8601 format.            |
+| `content`     | String | The unformatted content of the article.                                     |

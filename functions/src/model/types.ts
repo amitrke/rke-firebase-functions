@@ -1,3 +1,21 @@
+import * as admin from "firebase-admin";
+
+export interface NewsArticle {
+  source: {
+    id: string | null;
+    name: string;
+  };
+  author: string | null;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string | null;
+  publishedAt: string;
+  content: string;
+  apiSource: "newsapi" | "newsdata.io";
+  expireAt?: admin.firestore.Timestamp;
+}
+
 export interface Weather {
     lat: number;
     lon: number;
@@ -78,7 +96,7 @@ export interface FeelsLike {
     day: number;
     night: number;
     eve: number;
-    morn: number;
+morn: number;
 }
 export interface AlertsEntity {
     sender_name: string;
