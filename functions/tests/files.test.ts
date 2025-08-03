@@ -1,5 +1,18 @@
 import { fileBeingUsed, getFilePath, parseDate, parseFilePath } from "../src/files"
 
+jest.mock('firebase-functions', () => ({
+    ...jest.requireActual('firebase-functions'),
+    logger: {
+        info: jest.fn(),
+        error: jest.fn(),
+    },
+    config: () => ({
+        firebase: {
+            storageBucket: 'your-bucket.appspot.com',
+        },
+    }),
+}));
+
 describe("files", () => {
     it("parsePosts happy path", () => {
         const userFiles = { "MvOomgxG3GaGR7dWvqnsz1G5Jk23": ["rketrain.jpg", "nih.jpg", "contribute.jpg", "rkebridge1.jpeg", "rkelion1.jpg", "iitr1.jpg", "dsc_0041.jpg", "dsc_0042.jpg", "roorkee 001.jpg", "roorkee 002.jpg", "roorkee 003.jpg", "roorkee 004.jpg", "roorkee 005.jpg", "roorkee 006.jpg", "roorkee 007.jpg", "roorkee 008.jpg", "roorkee 009.jpg", "roorkee 010.jpg", "roorkee 011.jpg", "roorkee 012.jpg", "roorkee 013.jpg", "roorkee 014.jpg", "roorkee 015.jpg", "roorkee 016.jpg", "roorkee 017.jpg", "roorkee 018.jpg"], "NTh3DiJM31cDHk4rx914BONDT9k1": ["IMG_0421.JPG"] };
