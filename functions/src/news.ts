@@ -10,7 +10,7 @@ const KEYWORDS = ["roorkee"];
 
 export const updateNewsUtil = async () => {
   const newsCollection = admin.firestore().collection("news");
-  const NEWS_API_KEY = functions.config().config.newskey;
+  const NEWS_API_KEY = process.env.NEWS_API_KEY;
   const response = await fetch(
     "https://newsapi.org/v2/everything?q=Roorkee&apiKey=" + NEWS_API_KEY,
   );
@@ -29,15 +29,20 @@ export const updateNewsUtil = async () => {
       });
 
       if (hasKeyword) {
+        const {urlToImage, ...restOfArticle} = articleData;
         const article: NewsArticle = {
-          ...articleData,
+          ...restOfArticle,
+          image_url: urlToImage,
           apiSource: "newsapi",
           expireAt: admin.firestore.Timestamp.fromMillis(
             Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days from now
           ),
         };
 
-        const articleAsString = JSON.stringify(article);
+        const articleAsString = JSON.stringify({
+          title: article.title,
+          apiSource: article.apiSource,
+        });
         const hash = crypto.createHash("md5");
         hash.update(articleAsString);
         const md5Hash = hash.digest("hex");

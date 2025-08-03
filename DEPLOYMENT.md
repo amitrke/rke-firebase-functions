@@ -2,28 +2,36 @@
 
 ## 1. Set the API Keys
 
-Before deploying the functions, you need to set the required API keys as Firebase environment variables. These keys are used to fetch news and weather data.
+Before deploying the functions, you need to set the required API keys as environment variables.
 
-Run the following commands in your terminal, replacing the placeholder values with your actual API keys:
+### Local Development
 
-```bash
-# For NewsAPI (newsapi.org)
-firebase functions:config:set config.newskey="YOUR_NEWSAPI_API_KEY"
+For local development, create a `.env` file in the `functions` directory and add the following environment variables:
 
-# For NewsData.io
-firebase functions:config:set config.newsdataiokey="YOUR_NEWSDATAIO_API_KEY"
+```
+NEWS_API_KEY="YOUR_NEWSAPI_API_KEY"
+NEWSDATAIO_API_KEY="YOUR_NEWSDATAIO_API_KEY"
+WEATHER_API_KEY="YOUR_OPENWEATHERMAP_API_KEY"
 ```
 
-**Note:** You only need to do this once. The configuration will be stored securely in your Firebase project.
+**Note:** The `.env` file is ignored by git and should not be committed to the repository.
+
+### Production Deployment (GitHub Actions)
+
+For production deployments, you need to add the following secrets to your GitHub repository settings:
+
+- `FIREBASE_PROJECT_ID`: Your Firebase project ID.
+- `FIREBASE_TOKEN`: Your Firebase CI token.
+- `NEWS_API_KEY`: Your NewsAPI API key.
+- `NEWSDATAIO_API_KEY`: Your NewsData.io API key.
+- `WEATHER_API_KEY`: Your OpenWeatherMap API key.
 
 ## 2. Deploy the Functions
 
-After setting the API key, you can deploy your functions to Firebase.
+After setting the environment variables, you can deploy your functions to Firebase.
 
 Run the following command:
 
 ```bash
 firebase deploy --only functions
 ```
-
-This command will upload and activate the functions in your Firebase project. Any subsequent deployments will not require you to set the API key again unless you need to change it.

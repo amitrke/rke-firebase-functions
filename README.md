@@ -35,10 +35,11 @@ This project contains a set of Firebase Functions for the RKE project, responsib
 3.  **Set up Firebase configuration:**
     - Create a new Firebase project on the [Firebase Console](https://console.firebase.google.com/).
     - Add a new Web app to your project to get your Firebase configuration.
-    - Set the following environment variables for the functions:
-        ```bash
-        firebase functions:config:set config.pass="YOUR_OPENWEATHERMAP_API_KEY"
-        firebase functions:config:set config.newskey="YOUR_NEWSAPI_API_KEY"
+    - For local development, create a `.env` file in the `functions` directory and add the following environment variables:
+        ```
+        NEWS_API_KEY="YOUR_NEWSAPI_API_KEY"
+        NEWSDATAIO_API_KEY="YOUR_NEWSDATAIO_API_KEY"
+        WEATHER_API_KEY="YOUR_OPENWEATHERMAP_API_KEY"
         ```
 
 ## Cloud Functions
@@ -99,6 +100,6 @@ Each object in the `articles` array has the following structure:
 | `title`       | String | The headline or title of the article.                                       |
 | `description` | String | A short description or snippet from the article.                            |
 | `url`         | String | The direct URL to the article.                                              |
-| `urlToImage`  | String | The URL of an image associated with the article.                            |
+| `image_url`  | String | The URL of an image associated with the article.                            |
 | `publishedAt` | String | The date and time the article was published, in ISO 8601 format.            |
 | `content`     | String | The unformatted content of the article.                                     |

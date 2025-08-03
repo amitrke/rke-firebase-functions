@@ -9,7 +9,7 @@ export interface NewsArticle {
   title: string;
   description: string;
   url: string;
-  urlToImage: string | null;
+  image_url: string | null;
   publishedAt: string;
   content: string;
   apiSource: "newsapi" | "newsdata.io";
