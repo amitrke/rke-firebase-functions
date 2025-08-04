@@ -54,6 +54,7 @@ The following Cloud Functions are defined in this project:
 - **`updateFilesList`**: A scheduled function that runs every 7 days to list all files in Cloud Storage and add their metadata to Firestore.
 - **`checkFilesBeingUsed`**: A scheduled function that runs every 170 hours to check which files are referenced in "posts" and "albums" and updates a `isBeingUsed` flag in Firestore.
 - **`deleteUnusedFiles`**: A scheduled function that runs every 172 hours to delete files from Cloud Storage that are marked as unused.
+- **`updateHolidays`**: A scheduled function that runs once a year to fetch and update holidays for India.
 - **`onFileCreateV2`**: A function triggered by Cloud Storage when a new file is uploaded. It adds the file's metadata to Firestore.
 - **`onFileDeleteV2`**: A function triggered by Cloud Storage when a file is deleted. It removes the file's metadata from Firestore.
 
@@ -74,6 +75,7 @@ The following environment variables need to be set for the functions to work cor
 - `WEATHER_API_KEY`: Your API key for the OpenWeatherMap API.
 - `NEWS_API_KEY`: Your API key for the NewsAPI.
 - `NEWSDATAIO_API_KEY`: Your API key for NewsData.io.
+- `CALENDARIFIC_API_KEY`: Your API key for Calendarific.
 
 You can set these variables using the Firebase CLI as shown in the [Installation](#installation) section.
 
@@ -181,6 +183,32 @@ The response from the OpenWeatherMap `onecall` endpoint is a JSON object with th
 | `main`      | String | Group of weather parameters (Rain, Snow, Extreme etc.). |
 | `description`| String | Description of the weather condition. |
 | `icon`      | String | Weather icon id.       |
+
+## Events Collection
+
+This collection stores various types of events.
+
+### Holiday Document
+
+Holiday documents are stored with the following structure:
+
+| Field         | Type      | Description                                                                 |
+| :------------ | :-------- | :-------------------------------------------------------------------------- |
+| `type`        | String    | The type of event. For holidays, this is always `holiday`.                  |
+| `name`        | String    | The name of the holiday.                                                    |
+| `description` | String    | A description of the holiday.                                               |
+| `date`        | String    | The date of the holiday in ISO 8601 format (e.g., "2025-01-26").            |
+| `holidayTypes`| Array     | An array of strings categorizing the holiday (e.g., `["Gazetted holiday"]`). |
+| `locations`   | String    | Locations where the holiday is observed.                                    |
+| `states`      | String    | States where the holiday is observed.                                       |
+| `url`         | String    | A link to the holiday's page on Calendarific.                               |
+| `expireAt`    | Timestamp | The date and time when the document should be automatically deleted (30 days after the holiday). |
+
+**Note on TTL:** To enable automatic deletion of past holidays, you must enable the Time-to-Live (TTL) policy for the `events` collection in your Firebase project.
+1. Go to the Firestore Database section of the Firebase console.
+2. Select the `events` collection.
+3. Go to the TTL tab and click "Enable TTL".
+4. Set the `expireAt` field as the TTL field.
 
 ## Contributing
 

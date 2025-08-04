@@ -25,6 +25,7 @@ For production deployments, you need to add the following secrets to your GitHub
 - `NEWS_API_KEY`: Your NewsAPI API key.
 - `NEWSDATAIO_API_KEY`: Your NewsData.io API key.
 - `WEATHER_API_KEY`: Your OpenWeatherMap API key.
+- `CALENDARIFIC_API_KEY`: Your Calendarific API key.
 
 ## 2. Deploy the Functions
 

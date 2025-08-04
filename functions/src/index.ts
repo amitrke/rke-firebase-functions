@@ -9,6 +9,7 @@ import {
 import {updateWeatherUtil} from "./weather";
 import {updateNewsUtil} from "./news";
 import {updateNewsDataIOUtil} from "./newsdataio";
+import {updateHolidaysUtil} from "./holidays";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 
 admin.initializeApp();
@@ -25,6 +26,10 @@ export const updateNewsFromNewsDataIO = onSchedule({schedule: "every 12 hours", 
   () => {
     return updateNewsDataIOUtil();
   });
+
+export const updateHolidays = onSchedule({schedule: "0 0 1 1 *", region: "us-east1"}, () => {
+  return updateHolidaysUtil();
+});
 
 export const updateFilesList = listAndInsertFiles;
 
