@@ -48,7 +48,7 @@ jobs:
       - name: Verify Secret Availability
         env:
           TEST_SECRET: ${{ secrets.CALENDARIFIC_API_KEY }}
-        run: echo "First 2 chars of secret: ${TEST_SECRET:0:2}"
+        run: echo "First 2 chars of secret ${TEST_SECRET:0:2}"
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
