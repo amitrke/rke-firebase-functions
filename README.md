@@ -1,5 +1,7 @@
 # RKE Firebase Functions
 
+[![Deploy to Firebase](https://github.com/amitrke/rke-firebase-functions/actions/workflows/deploy.yml/badge.svg)](https://github.com/amitrke/rke-firebase-functions/actions/workflows/deploy.yml)
+
 This project contains a set of Firebase Functions for the RKE project, responsible for managing files, fetching weather data, and fetching news data.
 
 ## Features
