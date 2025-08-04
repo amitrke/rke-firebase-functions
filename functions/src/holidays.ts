@@ -33,6 +33,7 @@ const saveHolidays = async (holidays: any[]) => {
 };
 
 export const updateHolidaysUtil = async () => {
+  functions.logger.info(`Verifying API Key. First 5 chars: ${process.env.CALENDARIFIC_API_KEY?.substring(0, 5)}`);
   try {
     const currentYear = new Date().getFullYear();
     const [holidaysCurrentYear, holidaysNextYear] = await Promise.all([
@@ -40,19 +41,12 @@ export const updateHolidaysUtil = async () => {
       fetchHolidays(currentYear + 1),
     ]);
 
-    functions.logger.info("Full API response for current year:", JSON.stringify(holidaysCurrentYear, null, 2));
-    functions.logger.info("Full API response for next year:", JSON.stringify(holidaysNextYear, null, 2));
-
     if (holidaysCurrentYear?.response?.holidays) {
       await saveHolidays(holidaysCurrentYear.response.holidays);
-    } else {
-      functions.logger.warn("No holidays found for current year. Check full API response above.");
     }
 
     if (holidaysNextYear?.response?.holidays) {
       await saveHolidays(holidaysNextYear.response.holidays);
-    } else {
-      functions.logger.warn("No holidays found for next year. Check full API response above.");
     }
   } catch (error) {
     functions.logger.error("Error fetching holidays", error);
