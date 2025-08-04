@@ -13,17 +13,17 @@ import {onSchedule} from "firebase-functions/v2/scheduler";
 
 admin.initializeApp();
 
-export const updateWeather = onSchedule("every 60 minutes", async () => {
-  await updateWeatherUtil();
+export const updateWeather = onSchedule("every 60 minutes", () => {
+  return updateWeatherUtil();
 });
 
-export const updateNews = onSchedule("every 12 hours", async () => {
-  await updateNewsUtil();
+export const updateNews = onSchedule("every 12 hours", () => {
+  return updateNewsUtil();
 });
 
 export const updateNewsFromNewsDataIO = onSchedule("every 12 hours",
-  async () => {
-    await updateNewsDataIOUtil();
+  () => {
+    return updateNewsDataIOUtil();
   });
 
 export const updateFilesList = listAndInsertFiles;
