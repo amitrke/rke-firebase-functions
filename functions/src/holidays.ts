@@ -15,7 +15,7 @@ const saveHolidays = async (holidays: any[]) => {
   const updates = holidays.map(async (holiday: any) => {
     const holidayDate = new Date(holiday.date.iso);
     const expireAt = new Date(holidayDate.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days after holiday
-    const id = `${holiday.date.iso}-${holiday.name.toLowerCase().replace(/ /g, "-")}`;
+    const id = `${holiday.date.iso}-${holiday.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
 
     await eventsCollection.doc(id).set({
       type: "holiday",
