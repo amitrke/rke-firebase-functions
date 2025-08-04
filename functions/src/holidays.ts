@@ -6,7 +6,8 @@ const fetchHolidays = async (year: number) => {
   const CALENDARIFIC_API_KEY = process.env.CALENDARIFIC_API_KEY;
   const url = `https://calendarific.com/api/v2/holidays?&api_key=${CALENDARIFIC_API_KEY}&country=IN&year=${year}`;
   const response = await fetch(url);
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
 const saveHolidays = async (holidays: any[]) => {
