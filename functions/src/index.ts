@@ -30,6 +30,6 @@ export const updateFilesList = listAndInsertFiles;
 
 export const checkFilesBeingUsed = checkFilesBeingUsedFn;
 
-export const onFileCreate = onFileCreateFn;
-export const onFileDelete = onFileDeleteFn;
+export const onFileCreateV2 = onFileCreateFn;
+export const onFileDeleteV2 = onFileDeleteFn;
 export const deleteUnusedFiles = deleteUnusedFilesFn;
