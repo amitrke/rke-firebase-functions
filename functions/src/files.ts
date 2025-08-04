@@ -239,7 +239,7 @@ const addFileToDb = async (filePath: string) => {
   });
 };
 
-export const onFileCreateFn = onObjectFinalized(async ({data}) => {
+export const onFileCreateFn = onObjectFinalized({region: "us-east1"}, async ({data}) => {
   const fileBucket = data.bucket;
   if (!data.name) return;
   const filePath = data.name;
@@ -260,7 +260,7 @@ const deleteFileFromDb = async (filePath: string) => {
   await filesCollection.doc(id).delete();
 };
 
-export const onFileDeleteFn = onObjectDeleted(async ({data}) => {
+export const onFileDeleteFn = onObjectDeleted({region: "us-east1"}, async ({data}) => {
   if (!data.name) return;
   const filePath: string = data.name;
   console.log(`File ${filePath} deleted.`);
