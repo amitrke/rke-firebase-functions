@@ -38,13 +38,19 @@ export const updateHolidaysUtil = async () => {
       fetchHolidays(currentYear),
       fetchHolidays(currentYear + 1),
     ]);
-
+    console.log("Fetched holidays for years:", currentYear, currentYear + 1);
     if (holidaysCurrentYear?.response?.holidays) {
+      console.log("About to save holidays for current year");
       await saveHolidays(holidaysCurrentYear.response.holidays);
+    } else {
+      console.log("No holidays found for current year");
     }
 
     if (holidaysNextYear?.response?.holidays) {
+      console.log("About to save holidays for next year");
       await saveHolidays(holidaysNextYear.response.holidays);
+    } else {
+      console.log("No holidays found for next year");
     }
   } catch (error) {
     functions.logger.error("Error fetching holidays", error);
