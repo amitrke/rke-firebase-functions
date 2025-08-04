@@ -45,6 +45,9 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+      - name: Verify Secret Availability
+        run: echo "First 2 chars of secret: ${{ secrets.CALENDARIFIC_API_KEY:0:2 }}"
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
