@@ -59,7 +59,7 @@ export const parseDate = (date: string) => {
   return timestamp;
 };
 
-export const listAndInsertFiles = onSchedule("every 168 hours", async () => {
+export const listAndInsertFiles = onSchedule({schedule: "every 168 hours", region: "us-east1"}, async () => {
   // Get the storage bucket reference
   const bucket = admin.storage().bucket();
 
@@ -135,7 +135,7 @@ export const fileBeingUsed = (file: any, userFiles: any) => {
   }
 };
 
-export const checkFilesBeingUsedFn = onSchedule("every 170 hours", async () => {
+export const checkFilesBeingUsedFn = onSchedule({schedule: "every 170 hours", region: "us-east1"}, async () => {
   const userFiles: any = {};
 
   const postsCollection = admin.firestore().collection("posts");
@@ -210,7 +210,7 @@ export const getFilePath = (imageDetails: any) => {
   return `users/${userId}/images/${fileNameArray[0]}_${imageDimensions}.${fileExtension}`;
 };
 
-export const deleteUnusedFilesFn = onSchedule("every 172 hours", async () => {
+export const deleteUnusedFilesFn = onSchedule({schedule: "every 172 hours", region: "us-east1"}, async () => {
   const filesCollection = admin.firestore().collection("files");
   // Get all files that are not being used
   const files = await filesCollection.where("isBeingUsed", "==", false).get();

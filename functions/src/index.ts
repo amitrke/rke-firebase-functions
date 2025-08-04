@@ -13,15 +13,15 @@ import {onSchedule} from "firebase-functions/v2/scheduler";
 
 admin.initializeApp();
 
-export const updateWeather = onSchedule("every 60 minutes", () => {
+export const updateWeather = onSchedule({schedule: "every 60 minutes", region: "us-east1"}, () => {
   return updateWeatherUtil();
 });
 
-export const updateNews = onSchedule("every 12 hours", () => {
+export const updateNews = onSchedule({schedule: "every 12 hours", region: "us-east1"}, () => {
   return updateNewsUtil();
 });
 
-export const updateNewsFromNewsDataIO = onSchedule("every 12 hours",
+export const updateNewsFromNewsDataIO = onSchedule({schedule: "every 12 hours", region: "us-east1"},
   () => {
     return updateNewsDataIOUtil();
   });
