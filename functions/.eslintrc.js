@@ -21,6 +21,7 @@ module.exports = {
     "/lib/**/*", // Ignore built files.
     "/tests/*", // Ignore test files.
     "jest.config.js", // Ignore jest config.
+    "setupTests.js", // Ignore setup tests.
   ],
   plugins: [
     "@typescript-eslint",
