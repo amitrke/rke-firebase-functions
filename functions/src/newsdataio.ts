@@ -1,9 +1,10 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import * as logger from "firebase-functions/logger";
 import {createHash} from "crypto";
 import {NewsArticle} from "./model/types";
-
-const KEYWORDS = ["roorkee"];
+import {articleMatchesKeywords} from "./utils/filters";
+import {isValidNewsDataIOResponse, isValidArticle} from "./utils/validators";
+import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
 
 const mapToNewsArticle = (articleData: any): NewsArticle => {
   return {
@@ -23,33 +24,41 @@ const mapToNewsArticle = (articleData: any): NewsArticle => {
 };
 
 export const updateNewsDataIOUtil = async () => {
-  const newsCollection = admin.firestore().collection("news");
+  const newsCollection = admin.firestore().collection(COLLECTIONS.NEWS);
   const NEWSDATAIO_API_KEY = process.env.NEWSDATAIO_API_KEY;
 
   const url =
-    "https://newsdata.io/api/1/news?q=Roorkee&language=en&apikey=" +
-    NEWSDATAIO_API_KEY;
+    `${API.NEWS_DATA_IO.BASE_URL}?q=${API.NEWS_DATA_IO.QUERY}` +
+    `&language=${API.NEWS_DATA_IO.LANGUAGE}&apikey=${NEWSDATAIO_API_KEY}`;
 
   try {
     const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(
+        `NewsData.io API returned ${response.status}: ${response.statusText}`
+      );
+    }
+
     const data: any = await response.json();
+
+    // Validate response structure
+    if (!isValidNewsDataIOResponse(data)) {
+      throw new Error("Invalid response from NewsData.io");
+    }
 
     if (data.status === "success" && data.results) {
       for (const articleData of data.results) {
-        const title = articleData.title?.toLowerCase() || "";
-        const description = articleData.description?.toLowerCase() || "";
-        const content = articleData.content?.toLowerCase() || "";
+        // Validate article has required fields
+        if (!isValidArticle(articleData)) {
+          logger.warn("Skipping invalid article from NewsData.io", {article: articleData});
+          continue;
+        }
 
-        const hasKeyword = KEYWORDS.some((keyword) => {
-          return title.includes(keyword) ||
-            description.includes(keyword) ||
-            content.includes(keyword);
-        });
-
-        if (hasKeyword) {
+        if (articleMatchesKeywords(articleData, KEYWORDS)) {
           const article = mapToNewsArticle(articleData);
           article.expireAt = admin.firestore.Timestamp.fromMillis(
-            Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days from now
+            Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
           );
           const articleAsString = JSON.stringify({
             title: article.title,
@@ -63,6 +72,6 @@ export const updateNewsDataIOUtil = async () => {
       }
     }
   } catch (error) {
-    functions.logger.error("Error fetching news from newsdata.io", error);
+    logger.error("Error fetching news from newsdata.io", error);
   }
 };
