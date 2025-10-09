@@ -26,6 +26,8 @@ describe('updateHolidaysUtil', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock environment variable
+    process.env.CALENDARIFIC_API_KEY = 'test-api-key';
     mockFetch.mockImplementation(() => {
       return Promise.resolve(new Response(JSON.stringify(mockHolidays)));
     });

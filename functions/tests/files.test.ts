@@ -59,7 +59,7 @@ describe("files", () => {
     //Test parseDate
     it("parseDate happy path", () => {
         const date = "2022-08-30T21:25:28.984Z";
-        const expected = 1661894728000;
+        const expected = 1661894728984; // Updated: now includes milliseconds
         expect(parseDate(date)).toEqual(expected);
     });
 
