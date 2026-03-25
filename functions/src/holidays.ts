@@ -1,5 +1,4 @@
 import * as admin from "firebase-admin";
-import fetch from "node-fetch";
 import * as logger from "firebase-functions/logger";
 import {HolidayData, HolidaysResponse} from "./model/types";
 import {isValidHolidaysResponse} from "./utils/validators";

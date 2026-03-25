@@ -1,6 +1,5 @@
 import * as admin from "firebase-admin";
 import * as logger from "firebase-functions/logger";
-import fetch from "node-fetch";
 import {createHash} from "crypto";
 
 import {NewsApiResponse, NewsArticle} from "./model/types";

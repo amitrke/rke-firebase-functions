@@ -1,7 +1,6 @@
 import {Weather} from "./model/types";
 import * as admin from "firebase-admin";
 import * as logger from "firebase-functions/logger";
-import fetch from "node-fetch";
 import {isValidWeatherResponse} from "./utils/validators";
 import {LOCATIONS, API, COLLECTIONS} from "./config/constants";
 

@@ -1,10 +1,6 @@
 import { updateHolidaysUtil } from '../src/holidays';
 import * as admin from 'firebase-admin';
-import fetch from 'node-fetch';
 import mockHolidays from './mocks/holidays.json';
-
-jest.mock('node-fetch');
-const { Response } = jest.requireActual('node-fetch');
 
 const mockSet = jest.fn();
 const mockDoc = jest.fn(() => ({ set: mockSet }));
@@ -21,15 +17,21 @@ jest.mock('firebase-admin', () => ({
     fromDate: (date: Date) => date,
 };
 
-describe('updateHolidaysUtil', () => {
-  const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+const mockFetch = jest.fn();
 
+Object.defineProperty(global, 'fetch', {
+  value: mockFetch,
+  writable: true,
+});
+
+describe('updateHolidaysUtil', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Mock environment variable
     process.env.CALENDARIFIC_API_KEY = 'test-api-key';
-    mockFetch.mockImplementation(() => {
-      return Promise.resolve(new Response(JSON.stringify(mockHolidays)));
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => mockHolidays,
     });
   });
 
