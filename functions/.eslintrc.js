@@ -14,12 +14,13 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
+    project: ["tsconfig.json"],
     sourceType: "module",
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
     "/tests/*", // Ignore test files.
+    ".eslintrc.js", // Ignore ESLint config.
     "jest.config.js", // Ignore jest config.
     "setupTests.js", // Ignore setup tests.
   ],
@@ -32,6 +33,7 @@ module.exports = {
     "import/no-unresolved": 0,
     "indent": ["error", 2],
     "max-len": ["error", {"code": 120}],
+    "linebreak-style": "off",
     "@typescript-eslint/no-explicit-any": "off",
   },
 };
