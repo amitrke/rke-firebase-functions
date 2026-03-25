@@ -9,7 +9,7 @@
  * @return {boolean} true if any keyword is found in title, description, or content
  */
 export const articleMatchesKeywords = (
-  article: { title?: string; description?: string; content?: string },
+  article: { title?: string | null; description?: string | null; content?: string | null },
   keywords: string[]
 ): boolean => {
   const title = article.title?.toLowerCase() || "";

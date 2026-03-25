@@ -16,22 +16,33 @@ import {SCHEDULES} from "./config/constants";
 
 admin.initializeApp();
 
-export const updateWeather = onSchedule({schedule: SCHEDULES.WEATHER_UPDATE, region: "us-east1"}, () => {
-  return updateWeatherUtil();
-});
+export const updateWeather = onSchedule(
+  {schedule: SCHEDULES.WEATHER_UPDATE, region: "us-east1"},
+  async () => {
+    await updateWeatherUtil();
+  }
+);
 
-export const updateNews = onSchedule({schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"}, () => {
-  return updateNewsUtil();
-});
+export const updateNews = onSchedule(
+  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
+  async () => {
+    await updateNewsUtil();
+  }
+);
 
-export const updateNewsFromNewsDataIO = onSchedule({schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
-  () => {
-    return updateNewsDataIOUtil();
-  });
+export const updateNewsFromNewsDataIO = onSchedule(
+  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
+  async () => {
+    await updateNewsDataIOUtil();
+  }
+);
 
-export const updateHolidays = onSchedule({schedule: SCHEDULES.HOLIDAYS_UPDATE, region: "us-east1"}, () => {
-  return updateHolidaysUtil();
-});
+export const updateHolidays = onSchedule(
+  {schedule: SCHEDULES.HOLIDAYS_UPDATE, region: "us-east1"},
+  async () => {
+    await updateHolidaysUtil();
+  }
+);
 
 // File management functions
 // NOTE: Use fileMaintenanceOrchestrator for production to avoid race conditions

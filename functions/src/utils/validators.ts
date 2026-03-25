@@ -2,7 +2,17 @@
  * Validation utilities for API responses and data structures
  */
 
-import {Weather} from "../model/types";
+import {HolidaysResponse, NewsApiResponse, NewsDataIoResponse, Weather} from "../model/types";
+
+type ValidArticle = {
+  title: string;
+  url: string;
+  publishedAt: string;
+  author?: string | null;
+  description?: string | null;
+  content?: string | null;
+  urlToImage?: string | null;
+};
 
 /**
  * Check if weather API response is valid
@@ -28,7 +38,7 @@ export const isValidWeatherResponse = (data: any): data is Weather => {
  * @param {any} data - Response data to validate
  * @return {boolean} True if valid NewsAPI response
  */
-export const isValidNewsAPIResponse = (data: any): boolean => {
+export const isValidNewsAPIResponse = (data: any): data is NewsApiResponse => {
   return (
     data &&
     typeof data === "object" &&
@@ -42,7 +52,7 @@ export const isValidNewsAPIResponse = (data: any): boolean => {
  * @param {any} data - Response data to validate
  * @return {boolean} True if valid NewsData.io response
  */
-export const isValidNewsDataIOResponse = (data: any): boolean => {
+export const isValidNewsDataIOResponse = (data: any): data is NewsDataIoResponse => {
   return (
     data &&
     typeof data === "object" &&
@@ -56,7 +66,7 @@ export const isValidNewsDataIOResponse = (data: any): boolean => {
  * @param {any} data - Response data to validate
  * @return {boolean} True if valid holidays response
  */
-export const isValidHolidaysResponse = (data: any): boolean => {
+export const isValidHolidaysResponse = (data: any): data is HolidaysResponse => {
   return (
     data &&
     typeof data === "object" &&
@@ -71,11 +81,14 @@ export const isValidHolidaysResponse = (data: any): boolean => {
  * @param {any} article - Article to validate
  * @return {boolean} True if article has required fields
  */
-export const isValidArticle = (article: any): boolean => {
+export const isValidArticle = (article: any): article is ValidArticle => {
   return (
     article &&
     typeof article === "object" &&
     typeof article.title === "string" &&
+    typeof article.url === "string" &&
+    typeof article.publishedAt === "string" &&
+    (article.urlToImage === null || article.urlToImage === undefined || typeof article.urlToImage === "string") &&
     article.title.trim() !== ""
   );
 };

@@ -1,10 +1,11 @@
 import * as admin from "firebase-admin";
 import fetch from "node-fetch";
 import * as logger from "firebase-functions/logger";
+import {HolidayData, HolidaysResponse} from "./model/types";
 import {isValidHolidaysResponse} from "./utils/validators";
 import {TIME, TTL, API, COLLECTIONS} from "./config/constants";
 
-const fetchHolidays = async (year: number, apiKey: string) => {
+const fetchHolidays = async (year: number, apiKey: string): Promise<HolidaysResponse> => {
   const url = `${API.CALENDARIFIC.BASE_URL}?api_key=${apiKey}&country=${API.CALENDARIFIC.COUNTRY}&year=${year}`;
   const response = await fetch(url);
 
@@ -24,9 +25,9 @@ const fetchHolidays = async (year: number, apiKey: string) => {
   return data;
 };
 
-const saveHolidays = async (holidays: any[]) => {
+const saveHolidays = async (holidays: HolidayData[]) => {
   const eventsCollection = admin.firestore().collection(COLLECTIONS.EVENTS);
-  const updates = holidays.map(async (holiday: any) => {
+  const updates = holidays.map(async (holiday) => {
     const holidayDate = new Date(holiday.date.iso);
     const expireAt = new Date(holidayDate.getTime() + TIME.ONE_DAY_MS * TTL.HOLIDAYS_DAYS_AFTER);
     const id = `${holiday.date.iso}-${holiday.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;

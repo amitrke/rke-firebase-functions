@@ -7,13 +7,41 @@ export interface NewsArticle {
   };
   author: string | null;
   title: string;
-  description: string;
+    description: string | null;
   url: string;
   image_url: string | null;
   publishedAt: string;
-  content: string;
+    content: string | null;
   apiSource: "newsapi" | "newsdata.io";
   expireAt?: admin.firestore.Timestamp;
+}
+
+export interface NewsApiResponse {
+    status: "ok";
+    articles: Record<string, unknown>[];
+}
+
+export interface NewsDataIoResponse {
+    status: "success";
+    results: Record<string, unknown>[];
+}
+
+export interface HolidayData {
+    name: string;
+    description: string;
+    date: {
+        iso: string;
+    };
+    type: string[];
+    locations: string;
+    states: string;
+    canonical_url: string;
+}
+
+export interface HolidaysResponse {
+    response: {
+        holidays: HolidayData[];
+    };
 }
 
 export interface Weather {

@@ -3,7 +3,7 @@ import * as logger from "firebase-functions/logger";
 import fetch from "node-fetch";
 import {createHash} from "crypto";
 
-import {NewsArticle} from "./model/types";
+import {NewsApiResponse, NewsArticle} from "./model/types";
 import {articleMatchesKeywords} from "./utils/filters";
 import {isValidNewsAPIResponse, isValidArticle} from "./utils/validators";
 import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
@@ -29,15 +29,17 @@ export const updateNewsUtil = async () => {
       );
     }
 
-    const body = await response.json();
+    const body: unknown = await response.json();
 
     // Validate response structure
     if (!isValidNewsAPIResponse(body)) {
       throw new Error("Invalid response from NewsAPI");
     }
 
-    if (body && body["articles"]) {
-      const updates = body["articles"].map(async (articleData: any) => {
+    const newsData: NewsApiResponse = body;
+
+    if (newsData.articles.length > 0) {
+      const updates = newsData.articles.map(async (articleData) => {
         // Validate article has required fields
         if (!isValidArticle(articleData)) {
           logger.warn("Skipping invalid article", {article: articleData});
@@ -45,10 +47,18 @@ export const updateNewsUtil = async () => {
         }
 
         if (articleMatchesKeywords(articleData, KEYWORDS)) {
-          const {urlToImage, ...restOfArticle} = articleData;
           const article: NewsArticle = {
-            ...restOfArticle,
-            image_url: urlToImage,
+            source: {
+              id: null,
+              name: "newsapi",
+            },
+            author: typeof articleData.author === "string" ? articleData.author : null,
+            title: articleData.title,
+            description: typeof articleData.description === "string" ? articleData.description : null,
+            url: articleData.url,
+            image_url: articleData.urlToImage ?? null,
+            publishedAt: articleData.publishedAt,
+            content: typeof articleData.content === "string" ? articleData.content : null,
             apiSource: "newsapi",
             expireAt: admin.firestore.Timestamp.fromMillis(
               Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
@@ -67,12 +77,12 @@ export const updateNewsUtil = async () => {
       });
 
       await Promise.all(updates);
-      logger.info(`News update completed, processed ${body["articles"].length} articles`);
+      logger.info(`News update completed, processed ${newsData.articles.length} articles`);
     } else {
       logger.warn("No articles found in NewsAPI response");
     }
 
-    return body;
+    return;
   } catch (error) {
     logger.error("Error updating news from NewsAPI", {
       error: error instanceof Error ? error.message : String(error),
