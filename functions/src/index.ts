@@ -10,6 +10,7 @@ import {
 import {updateWeatherUtil} from "./weather";
 import {updateNewsUtil} from "./news";
 import {updateNewsDataIOUtil} from "./newsdataio";
+import {updateSerpApiNewsUtil} from "./serpapi";
 import {updateHolidaysUtil} from "./holidays";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {SCHEDULES} from "./config/constants";
@@ -34,6 +35,13 @@ export const updateNewsFromNewsDataIO = onSchedule(
   {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
   async () => {
     await updateNewsDataIOUtil();
+  }
+);
+
+export const updateNewsFromSerpApi = onSchedule(
+  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
+  async () => {
+    await updateSerpApiNewsUtil();
   }
 );
 

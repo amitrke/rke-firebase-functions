@@ -12,7 +12,7 @@ export interface NewsArticle {
   image_url: string | null;
   publishedAt: string;
     content: string | null;
-  apiSource: "newsapi" | "newsdata.io";
+    apiSource: "newsapi" | "newsdata.io" | "serpapi";
   expireAt?: admin.firestore.Timestamp;
 }
 
@@ -24,6 +24,10 @@ export interface NewsApiResponse {
 export interface NewsDataIoResponse {
     status: "success";
     results: Record<string, unknown>[];
+}
+
+export interface SerpApiResponse {
+    news_results: Record<string, unknown>[];
 }
 
 export interface HolidayData {

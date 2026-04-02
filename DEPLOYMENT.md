@@ -11,6 +11,7 @@ For local development, create a `.env` file in the `functions` directory and add
 ```
 NEWS_API_KEY="YOUR_NEWSAPI_API_KEY"
 NEWSDATAIO_API_KEY="YOUR_NEWSDATAIO_API_KEY"
+SERPAPI_API_KEY="YOUR_SERPAPI_API_KEY"
 WEATHER_API_KEY="YOUR_OPENWEATHERMAP_API_KEY"
 ```
 
@@ -24,6 +25,7 @@ For production deployments, you need to add the following secrets to your GitHub
 - `FIREBASE_TOKEN`: Your Firebase CI token.
 - `NEWS_API_KEY`: Your NewsAPI API key.
 - `NEWSDATAIO_API_KEY`: Your NewsData.io API key.
+- `SERPAPI_API_KEY`: Your SerpApi API key for Google News.
 - `WEATHER_API_KEY`: Your OpenWeatherMap API key.
 - `CALENDARIFIC_API_KEY`: Your Calendarific API key.
 

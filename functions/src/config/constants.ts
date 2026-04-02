@@ -122,6 +122,13 @@ export const API = {
     QUERY: "Roorkee",
     LANGUAGE: "en",
   },
+  SERP_API: {
+    BASE_URL: "https://serpapi.com/search.json",
+    ENGINE: "google_news",
+    QUERY: "Roorkee",
+    LANGUAGE: "en",
+    COUNTRY: "in",
+  },
   CALENDARIFIC: {
     BASE_URL: "https://calendarific.com/api/v2/holidays",
     COUNTRY: "IN",

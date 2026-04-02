@@ -2,7 +2,7 @@
  * Validation utilities for API responses and data structures
  */
 
-import {HolidaysResponse, NewsApiResponse, NewsDataIoResponse, Weather} from "../model/types";
+import {HolidaysResponse, NewsApiResponse, NewsDataIoResponse, SerpApiResponse, Weather} from "../model/types";
 
 type ValidArticle = {
   title: string;
@@ -58,6 +58,19 @@ export const isValidNewsDataIOResponse = (data: any): data is NewsDataIoResponse
     typeof data === "object" &&
     data.status === "success" &&
     Array.isArray(data.results)
+  );
+};
+
+/**
+ * Check if SerpApi Google News response is valid
+ * @param {any} data - Response data to validate
+ * @return {boolean} True if valid SerpApi response
+ */
+export const isValidSerpApiResponse = (data: any): data is SerpApiResponse => {
+  return (
+    data &&
+    typeof data === "object" &&
+    Array.isArray(data.news_results)
   );
 };
 

@@ -8,6 +8,7 @@ This project contains a set of Firebase Functions for the RKE project, responsib
 
 - **Weather Updates:** A scheduled function that fetches and stores the latest weather data for Roorkee, India from OpenWeatherMap every hour.
 - **News Updates:** A scheduled function that fetches and stores the latest news articles related to Roorkee from NewsAPI every 12 hours.
+- **SerpApi News Updates:** A scheduled function that fetches and stores the latest Google News articles related to Roorkee from SerpApi every 12 hours.
 - **File Management:**
     - Automatically records file metadata in Firestore when files are uploaded to Cloud Storage.
     - Automatically removes file metadata from Firestore when files are deleted from Cloud Storage.
@@ -41,6 +42,7 @@ This project contains a set of Firebase Functions for the RKE project, responsib
         ```
         NEWS_API_KEY="YOUR_NEWSAPI_API_KEY"
         NEWSDATAIO_API_KEY="YOUR_NEWSDATAIO_API_KEY"
+        SERPAPI_API_KEY="YOUR_SERPAPI_API_KEY"
         WEATHER_API_KEY="YOUR_OPENWEATHERMAP_API_KEY"
         ```
 
@@ -51,6 +53,7 @@ The following Cloud Functions are defined in this project:
 - **`updateWeather`**: A scheduled function that runs every 60 minutes to fetch and update weather data.
 - **`updateNews`**: A scheduled function that runs every 12 hours to fetch and update news articles.
 - **`updateNewsFromNewsDataIO`**: A scheduled function that runs every 12 hours to fetch and update news articles from NewsData.io.
+- **`updateNewsFromSerpApi`**: A scheduled function that runs every 12 hours to fetch and update news articles from SerpApi Google News.
 - **`updateFilesList`**: A scheduled function that runs every 7 days to list all files in Cloud Storage and add their metadata to Firestore.
 - **`checkFilesBeingUsed`**: A scheduled function that runs every 170 hours to check which files are referenced in "posts" and "albums" and updates a `isBeingUsed` flag in Firestore.
 - **`deleteUnusedFiles`**: A scheduled function that runs every 172 hours to delete files from Cloud Storage that are marked as unused.
@@ -75,6 +78,7 @@ The following environment variables need to be set for the functions to work cor
 - `WEATHER_API_KEY`: Your API key for the OpenWeatherMap API.
 - `NEWS_API_KEY`: Your API key for the NewsAPI.
 - `NEWSDATAIO_API_KEY`: Your API key for NewsData.io.
+- `SERPAPI_API_KEY`: Your API key for SerpApi Google News.
 - `CALENDARIFIC_API_KEY`: Your API key for Calendarific.
 
 You can set these variables using the Firebase CLI as shown in the [Installation](#installation) section.
