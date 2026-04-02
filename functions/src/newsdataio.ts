@@ -3,7 +3,7 @@ import * as logger from "firebase-functions/logger";
 import {createHash} from "crypto";
 import {NewsArticle} from "./model/types";
 import {articleMatchesKeywords} from "./utils/filters";
-import {isValidNewsDataIOResponse, isValidArticle} from "./utils/validators";
+import {isValidNewsDataIOResponse, isValidNewsDataIOArticle} from "./utils/validators";
 import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
 
 const mapToNewsArticle = (articleData: any): NewsArticle => {
@@ -50,7 +50,7 @@ export const updateNewsDataIOUtil = async () => {
     if (data.status === "success" && data.results) {
       for (const articleData of data.results) {
         // Validate article has required fields
-        if (!isValidArticle(articleData)) {
+        if (!isValidNewsDataIOArticle(articleData)) {
           logger.warn("Skipping invalid article from NewsData.io", {article: articleData});
           continue;
         }

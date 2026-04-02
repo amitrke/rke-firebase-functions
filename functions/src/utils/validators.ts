@@ -14,6 +14,12 @@ type ValidArticle = {
   urlToImage?: string | null;
 };
 
+type ValidNewsDataIOArticle = {
+  title: string;
+  link: string;
+  pubDate: string;
+};
+
 /**
  * Check if weather API response is valid
  * @param {any} data - Response data to validate
@@ -103,5 +109,23 @@ export const isValidArticle = (article: any): article is ValidArticle => {
     typeof article.publishedAt === "string" &&
     (article.urlToImage === null || article.urlToImage === undefined || typeof article.urlToImage === "string") &&
     article.title.trim() !== ""
+  );
+};
+
+/**
+ * Check if a NewsData.io article has required fields
+ * @param {any} article - Article to validate
+ * @return {boolean} True if article has required fields
+ */
+export const isValidNewsDataIOArticle = (article: any): article is ValidNewsDataIOArticle => {
+  return (
+    article &&
+    typeof article === "object" &&
+    typeof article.title === "string" &&
+    typeof article.link === "string" &&
+    typeof article.pubDate === "string" &&
+    article.title.trim() !== "" &&
+    article.link.trim() !== "" &&
+    article.pubDate.trim() !== ""
   );
 };
