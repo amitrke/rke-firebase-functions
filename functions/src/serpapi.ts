@@ -18,16 +18,40 @@ type SerpApiNewsResult = {
   };
 };
 
+const resolveSourceId = (result: SerpApiNewsResult): string => {
+  const sourceName = result.source?.name?.trim();
+  if (sourceName) {
+    return sourceName;
+  }
+
+  if (typeof result.link === "string" && result.link.trim() !== "") {
+    try {
+      const hostname = new URL(result.link).hostname.replace(/^www\./, "");
+      if (hostname) {
+        return hostname;
+      }
+    } catch {
+      // Ignore malformed URLs and use fallback source id.
+    }
+  }
+
+  return "serpapi";
+};
+
 const mapToNewsArticle = (result: SerpApiNewsResult): NewsArticle => {
-  const description = typeof result.snippet === "string" ? result.snippet : null;
+  const sourceId = resolveSourceId(result);
+  const snippet = typeof result.snippet === "string" ? result.snippet.trim() : "";
+  const title = typeof result.title === "string" ? result.title.trim() : "";
+  const description = snippet || title || null;
 
   return {
     source: {
-      id: null,
-      name: result.source?.name || "serpapi",
+      id: sourceId,
+      name: sourceId,
     },
+    source_id: sourceId,
     author: null,
-    title: result.title || "",
+    title: title || "",
     description,
     url: result.link || "",
     image_url: typeof result.thumbnail === "string" ? result.thumbnail : null,

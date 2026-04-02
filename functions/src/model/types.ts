@@ -5,6 +5,7 @@ export interface NewsArticle {
     id: string | null;
     name: string;
   };
+    source_id?: string | null;
   author: string | null;
   title: string;
     description: string | null;
