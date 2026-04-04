@@ -25,12 +25,12 @@
     call-me-maybe "^1.0.1"
     js-yaml "^4.1.0"
 
-"@apphosting/build@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@apphosting/build/-/build-0.1.6.tgz#c5d9d8162067a8a02aca3fc25aa95ebb45c30e04"
-  integrity sha512-nXK1wsR1tehaq9uSRDCGQmN+Dp0xbyGohssYd7g4W8ZbzHfUiab+Pabv34pHVTS03VaSVkjdNcR1g9hezi6s8g==
+"@apphosting/build@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@apphosting/build/-/build-0.1.7.tgz#1dd6a43980da2f4cb20f05fd3c2986e2eaa5862d"
+  integrity sha512-zNgQGiAWDOj6c+4ylv5ej3nLGXzMAVmzCGMqlbSarHe4bvBmZ2C5GfBRdJksedP7C9pqlwTWpxU5+GSzhJ+nKA==
   dependencies:
-    "@apphosting/common" "^0.0.8"
+    "@apphosting/common" "^0.0.9"
     "@npmcli/promise-spawn" "^3.0.0"
     colorette "^2.0.20"
     commander "^11.1.0"
@@ -41,6 +41,11 @@
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@apphosting/common/-/common-0.0.8.tgz#6ca3ca2ac9c4f48cc1181093e5924a3459f3f4e0"
   integrity sha512-RJu5gXs2HYV7+anxpVPpp04oXeuHbV3qn402AdXVlnuYM/uWo7aceqmngpfp6Bi376UzRqGjfpdwFHxuwsEGXQ==
+
+"@apphosting/common@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@apphosting/common/-/common-0.0.9.tgz#af0b5375e8169e1d6ad32eebdec9d67d5caf669b"
+  integrity sha512-ZbPZDcVhEN+8m0sf90PmQN4xWaKmmySnBSKKPaIOD0JvcDsRr509WenFEFlojP++VSxwFZDGG/TYsHs1FMMqpw==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.22.13":
   version "7.22.13"
@@ -4211,12 +4216,12 @@ firebase-functions@^7.2.2:
     express "^4.21.0"
     protobufjs "^7.2.2"
 
-firebase-tools@^15.11.0:
-  version "15.11.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.11.0.tgz#7aa2e7be5c8746a88342864566453df3bdecda87"
-  integrity sha512-Ky2sBl9puYShitmwQWdADOMNUod89G2mghnp5vF41Vl1U0+iDL72jm0fN4tAoaH+8Z8w8wpqkELZtIV8wthW3w==
+firebase-tools@^15.13.0:
+  version "15.13.0"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.13.0.tgz#4397270af5f9f0b846aa690085abb65b0dbc63d1"
+  integrity sha512-ZEA3ESYScgYhRv7icyQb9fB7IXWeIDEwLtHSCesuvQLUbSzEaOxowThsp8koPN8T7TT5k3RFa3pKpGUSZeeHSA==
   dependencies:
-    "@apphosting/build" "^0.1.6"
+    "@apphosting/build" "^0.1.7"
     "@apphosting/common" "^0.0.8"
     "@electric-sql/pglite" "^0.3.3"
     "@electric-sql/pglite-tools" "^0.2.8"
@@ -4256,7 +4261,7 @@ firebase-tools@^15.11.0:
     jsonwebtoken "^9.0.2"
     leven "^3.1.0"
     libsodium-wrappers "^0.7.10"
-    lodash "^4.17.21"
+    lodash "^4.18.0"
     lsofi "1.0.0"
     marked "^13.0.2"
     marked-terminal "^7.0.0"
@@ -4279,6 +4284,7 @@ firebase-tools@^15.11.0:
     stream-chain "^2.2.4"
     stream-json "^1.7.3"
     superstatic "^10.0.0"
+    tar "^7.5.11"
     tcp-port-used "^1.0.2"
     tmp "^0.2.3"
     triple-beam "^1.3.0"
@@ -6316,10 +6322,10 @@ lodash.snakecase@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.snakecase/-/lodash.snakecase-4.1.1.tgz#39d714a35357147837aefd64b5dcbb16becd8f8d"
   integrity sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==
 
-lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.17.5:
-  version "4.17.23"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.23.tgz#f113b0378386103be4f6893388c73d0bde7f2c5a"
-  integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
+lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.17.5, lodash@^4.18.0:
+  version "4.18.1"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
+  integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
 
 log-symbols@^4.1.0:
   version "4.1.0"
@@ -6542,14 +6548,7 @@ minimatch@^10.2.2:
   dependencies:
     brace-expansion "^5.0.2"
 
-minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
-  integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
-  dependencies:
-    brace-expansion "^1.1.7"
-
-minimatch@^3.0.5:
+minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.5.tgz#580c88f8d5445f2bd6aa8f3cadefa0de79fbd69e"
   integrity sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==
@@ -8408,10 +8407,10 @@ tar-stream@^3.0.0:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tar@^7.4.3:
-  version "7.5.11"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-7.5.11.tgz#1250fae45d98806b36d703b30973fa8e0a6d8868"
-  integrity sha512-ChjMH33/KetonMTAtpYdgUFr0tbz69Fp2v7zWxQfYZX4g5ZN2nOBXm1R2xyA+lMIKrLKIoKAwFj93jE/avX9cQ==
+tar@^7.4.3, tar@^7.5.11:
+  version "7.5.13"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-7.5.13.tgz#0d214ed56781a26edc313581c0e2d929ceeb866d"
+  integrity sha512-tOG/7GyXpFevhXVh8jOPJrmtRpOTsYqUIkVdVooZYJS/z8WhfQUX8RJILmeuJNinGAMSu1veBr4asSHFt5/hng==
   dependencies:
     "@isaacs/fs-minipass" "^4.0.0"
     chownr "^3.0.0"
