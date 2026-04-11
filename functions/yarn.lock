@@ -4258,10 +4258,10 @@ firebase-functions@^7.2.2:
     express "^4.21.0"
     protobufjs "^7.2.2"
 
-firebase-tools@^15.13.0:
-  version "15.13.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.13.0.tgz#4397270af5f9f0b846aa690085abb65b0dbc63d1"
-  integrity sha512-ZEA3ESYScgYhRv7icyQb9fB7IXWeIDEwLtHSCesuvQLUbSzEaOxowThsp8koPN8T7TT5k3RFa3pKpGUSZeeHSA==
+firebase-tools@^15.14.0:
+  version "15.14.0"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.14.0.tgz#6a36638bfd60955c8a57bbed59afc5da8bce12b3"
+  integrity sha512-SdI+vxB5tLAgJxTxbRJ89tIv1am3Bc1RPW/TL1MIpNDhW0/naS3j28JyzjaHIy/8qBBkzGIzDakI9qFNlVcnLA==
   dependencies:
     "@apphosting/build" "^0.1.7"
     "@apphosting/common" "^0.0.8"
