@@ -2,18 +2,12 @@ name: Validate Firebase Functions
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-  FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-  NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
-  NEWSDATAIO_API_KEY: ${{ secrets.NEWSDATAIO_API_KEY }}
-  SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
-  WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-  CALENDARIFIC_API_KEY: ${{ secrets.CALENDARIFIC_API_KEY }}
 
 on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -54,24 +48,19 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Authenticate with Google Cloud
-        if: ${{ env.GCP_SA_KEY != '' }}
-        uses: google-github-actions/auth@v2
+        uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: "${{ env.GCP_SA_KEY }}"
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Create .env file
-        if: ${{ env.NEWS_API_KEY != '' && env.NEWSDATAIO_API_KEY != '' && env.SERPAPI_API_KEY != '' && env.WEATHER_API_KEY != '' && env.CALENDARIFIC_API_KEY != '' }}
         run: |
-          echo "NEWS_API_KEY=${{ env.NEWS_API_KEY }}" >> .env
-          echo "NEWSDATAIO_API_KEY=${{ env.NEWSDATAIO_API_KEY }}" >> .env
-          echo "SERPAPI_API_KEY=${{ env.SERPAPI_API_KEY }}" >> .env
-          echo "WEATHER_API_KEY=${{ env.WEATHER_API_KEY }}" >> .env
-          echo "CALENDARIFIC_API_KEY=${{ env.CALENDARIFIC_API_KEY }}" >> .env
+          echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> .env
+          echo "NEWSDATAIO_API_KEY=${{ secrets.NEWSDATAIO_API_KEY }}" >> .env
+          echo "SERPAPI_API_KEY=${{ secrets.SERPAPI_API_KEY }}" >> .env
+          echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> .env
+          echo "CALENDARIFIC_API_KEY=${{ secrets.CALENDARIFIC_API_KEY }}" >> .env
 
       - name: Validate Firebase Functions
-        if: ${{ env.GCP_SA_KEY != '' && env.FIREBASE_PROJECT_ID != '' && env.NEWS_API_KEY != '' && env.NEWSDATAIO_API_KEY != '' && env.SERPAPI_API_KEY != '' && env.WEATHER_API_KEY != '' && env.CALENDARIFIC_API_KEY != '' }}
-        run: firebase deploy --dry-run --only functions --project "${{ env.FIREBASE_PROJECT_ID }}"
+        run: firebase deploy --dry-run --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
-      - name: Firebase dry-run skipped
-        if: ${{ env.GCP_SA_KEY == '' || env.FIREBASE_PROJECT_ID == '' || env.NEWS_API_KEY == '' || env.NEWSDATAIO_API_KEY == '' || env.SERPAPI_API_KEY == '' || env.WEATHER_API_KEY == '' || env.CALENDARIFIC_API_KEY == '' }}
-        run: echo "Skipping Firebase dry-run because required secrets are unavailable for this pull request."
+
