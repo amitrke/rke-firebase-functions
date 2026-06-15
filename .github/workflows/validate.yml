@@ -15,9 +15,6 @@ jobs:
     defaults:
       run:
         working-directory: functions
-    env:
-      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
     steps:
       - uses: actions/checkout@v6
 
@@ -50,13 +47,11 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Authenticate with Google Cloud
-        if: env.GCP_SA_KEY != ''
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Create .env file
-        if: env.GCP_SA_KEY != ''
         run: |
           echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> .env
           echo "NEWSDATAIO_API_KEY=${{ secrets.NEWSDATAIO_API_KEY }}" >> .env
@@ -65,7 +60,6 @@ jobs:
           echo "CALENDARIFIC_API_KEY=${{ secrets.CALENDARIFIC_API_KEY }}" >> .env
 
       - name: Validate Firebase Functions
-        if: env.GCP_SA_KEY != ''
         run: firebase deploy --dry-run --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
 
