@@ -218,6 +218,17 @@ Holiday documents are stored with the following structure:
 
 Contributions are welcome! Please open an issue or submit a pull request if you have any improvements or suggestions.
 
+## Maintainance
+
+### Dependency Updates
+
+```
+yarn audit
+yarn run audit:fix
+yarn upgrade firebase-admin firebase-functions
+```
+
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
