@@ -1,5 +1,5 @@
 import {Weather} from "./model/types";
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {isValidWeatherResponse} from "./utils/validators";
 import {LOCATIONS, API, COLLECTIONS} from "./config/constants";
@@ -35,7 +35,7 @@ export const updateWeatherUtil = async () => {
 
     const weatherData: Weather = body;
 
-    const weatherCollection = admin.firestore().collection(COLLECTIONS.WEATHER);
+    const weatherCollection = getFirestore().collection(COLLECTIONS.WEATHER);
     await weatherCollection.doc(LOCATIONS.ROORKEE.name).set(weatherData);
 
     logger.info("Weather updated successfully");

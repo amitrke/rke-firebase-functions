@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {initializeApp} from "firebase-admin/app";
 import {
   checkFilesBeingUsedFn,
   deleteUnusedFilesFn,
@@ -15,7 +15,7 @@ import {updateHolidaysUtil} from "./holidays";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {SCHEDULES} from "./config/constants";
 
-admin.initializeApp();
+initializeApp();
 
 export const updateWeather = onSchedule(
   {schedule: SCHEDULES.WEATHER_UPDATE, region: "us-east1"},

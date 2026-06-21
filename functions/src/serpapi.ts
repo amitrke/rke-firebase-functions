@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {createHash} from "crypto";
 
@@ -67,7 +67,7 @@ export const updateSerpApiNewsUtil = async () => {
   try {
     logger.info("Starting news update from SerpApi Google News");
 
-    const newsCollection = admin.firestore().collection(COLLECTIONS.NEWS);
+    const newsCollection = getFirestore().collection(COLLECTIONS.NEWS);
     const SERPAPI_API_KEY = process.env.SERPAPI_API_KEY;
 
     if (!SERPAPI_API_KEY) {
@@ -122,7 +122,7 @@ export const updateSerpApiNewsUtil = async () => {
         return;
       }
 
-      article.expireAt = admin.firestore.Timestamp.fromMillis(
+      article.expireAt = Timestamp.fromMillis(
         Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
       );
 
