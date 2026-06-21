@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import type {Timestamp} from "firebase-admin/firestore";
 
 export interface NewsArticle {
   source: {
@@ -14,7 +14,7 @@ export interface NewsArticle {
   publishedAt: string;
     content: string | null;
     apiSource: "newsapi" | "newsdata.io" | "serpapi";
-  expireAt?: admin.firestore.Timestamp;
+  expireAt?: Timestamp;
 }
 
 export interface NewsApiResponse {

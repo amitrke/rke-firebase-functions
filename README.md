@@ -225,7 +225,8 @@ Contributions are welcome! Please open an issue or submit a pull request if you 
 ```
 yarn audit
 yarn run audit:fix
-yarn upgrade firebase-admin firebase-functions
+yarn upgrade-interactive --latest
+
 ```
 
 

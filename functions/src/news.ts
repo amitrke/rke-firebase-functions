@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {createHash} from "crypto";
 
@@ -11,7 +11,7 @@ export const updateNewsUtil = async () => {
   try {
     logger.info("Starting news update from NewsAPI");
 
-    const newsCollection = admin.firestore().collection(COLLECTIONS.NEWS);
+    const newsCollection = getFirestore().collection(COLLECTIONS.NEWS);
     const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
     if (!NEWS_API_KEY) {
@@ -59,7 +59,7 @@ export const updateNewsUtil = async () => {
             publishedAt: articleData.publishedAt,
             content: typeof articleData.content === "string" ? articleData.content : null,
             apiSource: "newsapi",
-            expireAt: admin.firestore.Timestamp.fromMillis(
+            expireAt: Timestamp.fromMillis(
               Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
             ),
           };

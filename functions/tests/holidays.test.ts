@@ -1,21 +1,18 @@
 import { updateHolidaysUtil } from '../src/holidays';
-import * as admin from 'firebase-admin';
 import mockHolidays from './mocks/holidays.json';
 
 const mockSet = jest.fn();
 const mockDoc = jest.fn(() => ({ set: mockSet }));
 const mockCollection = jest.fn(() => ({ doc: mockDoc }));
 
-jest.mock('firebase-admin', () => ({
-  initializeApp: jest.fn(),
-  firestore: jest.fn(() => ({
+jest.mock("firebase-admin/firestore", () => ({
+  getFirestore: jest.fn(() => ({
     collection: mockCollection,
   })),
-}));
-
-(admin.firestore as any).Timestamp = {
+  Timestamp: {
     fromDate: (date: Date) => date,
-};
+  },
+}));
 
 const mockFetch = jest.fn();
 

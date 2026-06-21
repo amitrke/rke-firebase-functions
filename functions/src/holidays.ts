@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {HolidayData, HolidaysResponse} from "./model/types";
 import {isValidHolidaysResponse} from "./utils/validators";
@@ -25,7 +25,7 @@ const fetchHolidays = async (year: number, apiKey: string): Promise<HolidaysResp
 };
 
 const saveHolidays = async (holidays: HolidayData[]) => {
-  const eventsCollection = admin.firestore().collection(COLLECTIONS.EVENTS);
+  const eventsCollection = getFirestore().collection(COLLECTIONS.EVENTS);
   const updates = holidays.map(async (holiday) => {
     const holidayDate = new Date(holiday.date.iso);
     const expireAt = new Date(holidayDate.getTime() + TIME.ONE_DAY_MS * TTL.HOLIDAYS_DAYS_AFTER);
@@ -40,7 +40,7 @@ const saveHolidays = async (holidays: HolidayData[]) => {
       locations: holiday.locations,
       states: holiday.states,
       url: holiday.canonical_url,
-      expireAt: admin.firestore.Timestamp.fromDate(expireAt),
+      expireAt: Timestamp.fromDate(expireAt),
     });
   });
   await Promise.all(updates);

@@ -1,11 +1,10 @@
-import * as admin from "firebase-admin";
-import {Storage} from "@google-cloud/storage";
+import {getFirestore, FieldValue} from "firebase-admin/firestore";
+import {getStorage} from "firebase-admin/storage";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {onObjectFinalized, onObjectDeleted} from "firebase-functions/v2/storage";
 import * as logger from "firebase-functions/logger";
 import {SCHEDULES, COLLECTIONS, STORAGE, FIRESTORE} from "./config/constants";
 
-const storage = new Storage();
 
 const imageSizeMap = {
   "200x200": "s",
@@ -83,9 +82,6 @@ export const parseFilePath = (filePath: string): {
     imageSize = imageSizeMap["680x680"];
   } else if (imageDimensions === "1920x1080") {
     imageSize = imageSizeMap["1920x1080"];
-  } else {
-    logger.info("Unrecognized image dimensions", {imageDimensions, filePath});
-    imageSize = "";
   }
 
   return {userId, fileName, imageSize, imageDimensions};
@@ -105,7 +101,7 @@ export const listAndInsertFilesUtil = async () => {
     logger.info("Starting file list sync");
 
     // Get the storage bucket reference
-    const bucket = admin.storage().bucket();
+    const bucket = getStorage().bucket();
 
     // Get all files in the storage location
     const [files] = await bucket.getFiles({
@@ -126,12 +122,12 @@ export const listAndInsertFilesUtil = async () => {
     }
 
     // Get a Firestore reference to the "files" collection
-    const filesCollection = admin.firestore().collection(COLLECTIONS.FILES);
+    const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
 
     // Use batch writes to efficiently insert files (max 500 per batch)
     const BATCH_SIZE = FIRESTORE.MAX_BATCH_SIZE;
     for (let i = 0; i < processedFiles.length; i += BATCH_SIZE) {
-      const batch = admin.firestore().batch();
+      const batch = getFirestore().batch();
       const batchFiles = processedFiles.slice(i, i + BATCH_SIZE);
 
       for (const file of batchFiles) {
@@ -198,7 +194,7 @@ export const checkFilesBeingUsedUtil = async () => {
 
     const userFiles: any = {};
 
-    const postsCollection = admin.firestore().collection(COLLECTIONS.POSTS);
+    const postsCollection = getFirestore().collection(COLLECTIONS.POSTS);
     const posts = await postsCollection.get();
 
     for (const post of posts.docs) {
@@ -216,7 +212,7 @@ export const checkFilesBeingUsedUtil = async () => {
       }
     }
 
-    const albumsCollection = admin.firestore().collection(COLLECTIONS.ALBUMS);
+    const albumsCollection = getFirestore().collection(COLLECTIONS.ALBUMS);
     const albums = await albumsCollection.get();
 
     for (const album of albums.docs) {
@@ -237,7 +233,7 @@ export const checkFilesBeingUsedUtil = async () => {
     logger.info(
       "userFiles", JSON.stringify(userFiles));
 
-    const filesCollection = admin.firestore().collection(COLLECTIONS.FILES);
+    const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
     const files = await filesCollection.get();
 
     const processedFiles: any[] = [];
@@ -252,7 +248,7 @@ export const checkFilesBeingUsedUtil = async () => {
     // Use batch writes to efficiently update files (max 500 per batch)
     const BATCH_SIZE = FIRESTORE.MAX_BATCH_SIZE;
     for (let i = 0; i < processedFiles.length; i += BATCH_SIZE) {
-      const batch = admin.firestore().batch();
+      const batch = getFirestore().batch();
       const batchFiles = processedFiles.slice(i, i + BATCH_SIZE);
 
       for (const file of batchFiles) {
@@ -294,7 +290,7 @@ export const deleteUnusedFilesUtil = async () => {
   try {
     logger.info("Starting unused files deletion");
 
-    const filesCollection = admin.firestore().collection(COLLECTIONS.FILES);
+    const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
     // Get all files that are not being used
     const files = await filesCollection.where("isBeingUsed", "==", false).get();
 
@@ -306,7 +302,7 @@ export const deleteUnusedFilesUtil = async () => {
     logger.info(`Found ${files.docs.length} unused files to delete`);
 
     // Delete files from storage
-    const bucket = admin.storage().bucket();
+    const bucket = getStorage().bucket();
     const deleteFiles = files.docs.map(async (file) => {
       const imageDetails = file.data();
       const filePath = getFilePath(imageDetails);
@@ -373,10 +369,10 @@ const addFileToDb = async (filePath: string) => {
   const imageDetails = parseFilePath(filePath);
   if (!imageDetails) return;
   const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
-  const filesCollection = admin.firestore().collection(COLLECTIONS.FILES);
+  const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
   await filesCollection.doc(id).set({
     ...imageDetails,
-    timeCreated: admin.firestore.FieldValue.serverTimestamp(),
+    timeCreated: FieldValue.serverTimestamp(),
   });
 };
 
@@ -384,7 +380,7 @@ export const onFileCreateFn = onObjectFinalized({region: "us-east1"}, async ({da
   const fileBucket = data.bucket;
   if (!data.name) return;
   const filePath = data.name;
-  const bucket = storage.bucket(fileBucket);
+  const bucket = getStorage().bucket(fileBucket);
   const file = bucket.file(filePath);
 
   const [metadata] = await file.getMetadata();
@@ -397,7 +393,7 @@ const deleteFileFromDb = async (filePath: string) => {
   const imageDetails = parseFilePath(filePath);
   if (!imageDetails) return;
   const id = `${imageDetails.userId}-${imageDetails.fileName}-${imageDetails.imageSize}`;
-  const filesCollection = admin.firestore().collection(COLLECTIONS.FILES);
+  const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
   await filesCollection.doc(id).delete();
 };
 

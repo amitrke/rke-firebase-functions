@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {createHash} from "crypto";
 import {NewsArticle} from "./model/types";
@@ -24,7 +24,7 @@ const mapToNewsArticle = (articleData: any): NewsArticle => {
 };
 
 export const updateNewsDataIOUtil = async () => {
-  const newsCollection = admin.firestore().collection(COLLECTIONS.NEWS);
+  const newsCollection = getFirestore().collection(COLLECTIONS.NEWS);
   const NEWSDATAIO_API_KEY = process.env.NEWSDATAIO_API_KEY;
 
   const url =
@@ -57,7 +57,7 @@ export const updateNewsDataIOUtil = async () => {
 
         if (articleMatchesKeywords(articleData, KEYWORDS)) {
           const article = mapToNewsArticle(articleData);
-          article.expireAt = admin.firestore.Timestamp.fromMillis(
+          article.expireAt = Timestamp.fromMillis(
             Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
           );
           const articleAsString = JSON.stringify({
