@@ -40,5 +40,11 @@
     "typescript": "^6.0.3",
     "yarn-audit-fix": "^10.1.1"
   },
+  "resolutions": {
+    "minimatch": "^5.1.8",
+    "lodash": ">=4.18.0",
+    "path-to-regexp": ">=0.1.13",
+    "picomatch": ">=4.0.4"
+  },
   "private": true
 }
