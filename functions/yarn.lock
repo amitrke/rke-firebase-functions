@@ -4110,10 +4110,10 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
-firebase-admin@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-14.0.0.tgz#eabab2eea7d2107584cc6ab23e78f29dfb610fc2"
-  integrity sha512-U88/r6VWiBQ05+UlLaF1A1AN4Y3SAGQKcQWawzafEAnXVaCZ21+2KclMPdlIQAAF5pUtN+FkXCSQnJEpc6QDZA==
+firebase-admin@^14.1.0:
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-14.1.0.tgz#edc206d93fe1ba1949e3405e0704820f8a5dfc6b"
+  integrity sha512-GdHh6vHWm9LVRt+3hINWczaA7fPwnN/l4xZdqzn+wNPYErrLI1x6u1mvAJM/5IGgYI9EqQgLt1EyBG8ok/hWCg==
   dependencies:
     "@fastify/busboy" "^3.0.0"
     "@firebase/database-compat" "^2.1.4"
@@ -4619,19 +4619,7 @@ google-auth-library@10.5.0:
     gtoken "^8.0.0"
     jws "^4.0.0"
 
-google-auth-library@^10.0.0, google-auth-library@^10.0.0-rc.1, google-auth-library@^10.1.0, google-auth-library@^10.5.0:
-  version "10.6.1"
-  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-10.6.1.tgz#91339f45dc5fecad164a58fa30bdd5db4fe5332a"
-  integrity sha512-5awwuLrzNol+pFDmKJd0dKtZ0fPLAtoA5p7YO4ODsDu6ONJUVqbYwvv8y2ZBO5MBNp9TJXigB19710kYpBPdtA==
-  dependencies:
-    base64-js "^1.3.0"
-    ecdsa-sig-formatter "^1.0.11"
-    gaxios "7.1.3"
-    gcp-metadata "8.1.2"
-    google-logging-utils "1.1.3"
-    jws "^4.0.0"
-
-google-auth-library@^10.6.2:
+google-auth-library@^10.0.0, google-auth-library@^10.0.0-rc.1, google-auth-library@^10.1.0, google-auth-library@^10.5.0, google-auth-library@^10.6.2:
   version "10.7.0"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-10.7.0.tgz#affbe0be940e426ddd5d7dc3624c9f543216a402"
   integrity sha512-QpTAbNJ36TliZLx3TTtahR8HG0hN9RllL1e3FymOvQSIKK8JmgV58H924ub2wa2DsS3ANjjP1Aw1N+Ramc8hqQ==
