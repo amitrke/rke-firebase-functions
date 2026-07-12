@@ -1,16 +1,21 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
+/** @type {import('jest').Config} */
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
   setupFilesAfterEnv: ['./setupTests.js'],
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        module: 'commonjs',
-        esModuleInterop: true,
-        resolveJsonModule: true,
-        types: ['jest', 'node'],
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+          },
+          target: 'es2017',
+        },
+        module: {
+          type: 'commonjs',
+        },
       },
-    },
+    ],
   },
 };
