@@ -2,7 +2,7 @@
  * Validation utilities for API responses and data structures
  */
 
-import {HolidaysResponse, NewsApiResponse, NewsDataIoResponse, SerpApiResponse, Weather} from "../model/types";
+import { HolidaysResponse, NewsApiResponse, NewsDataIoResponse, SerpApiResponse, Weather } from "../model/types";
 
 type ValidArticle = {
   title: string;
@@ -45,12 +45,7 @@ export const isValidWeatherResponse = (data: any): data is Weather => {
  * @return {boolean} True if valid NewsAPI response
  */
 export const isValidNewsAPIResponse = (data: any): data is NewsApiResponse => {
-  return (
-    data &&
-    typeof data === "object" &&
-    data.status === "ok" &&
-    Array.isArray(data.articles)
-  );
+  return data && typeof data === "object" && data.status === "ok" && Array.isArray(data.articles);
 };
 
 /**
@@ -59,12 +54,7 @@ export const isValidNewsAPIResponse = (data: any): data is NewsApiResponse => {
  * @return {boolean} True if valid NewsData.io response
  */
 export const isValidNewsDataIOResponse = (data: any): data is NewsDataIoResponse => {
-  return (
-    data &&
-    typeof data === "object" &&
-    data.status === "success" &&
-    Array.isArray(data.results)
-  );
+  return data && typeof data === "object" && data.status === "success" && Array.isArray(data.results);
 };
 
 /**
@@ -73,11 +63,7 @@ export const isValidNewsDataIOResponse = (data: any): data is NewsDataIoResponse
  * @return {boolean} True if valid SerpApi response
  */
 export const isValidSerpApiResponse = (data: any): data is SerpApiResponse => {
-  return (
-    data &&
-    typeof data === "object" &&
-    Array.isArray(data.news_results)
-  );
+  return data && typeof data === "object" && Array.isArray(data.news_results);
 };
 
 /**

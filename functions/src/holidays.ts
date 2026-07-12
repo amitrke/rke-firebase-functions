@@ -1,17 +1,15 @@
-import {getFirestore, Timestamp} from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
-import {HolidayData, HolidaysResponse} from "./model/types";
-import {isValidHolidaysResponse} from "./utils/validators";
-import {TIME, TTL, API, COLLECTIONS} from "./config/constants";
+import { HolidayData, HolidaysResponse } from "./model/types";
+import { isValidHolidaysResponse } from "./utils/validators";
+import { TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 const fetchHolidays = async (year: number, apiKey: string): Promise<HolidaysResponse> => {
   const url = `${API.CALENDARIFIC.BASE_URL}?api_key=${apiKey}&country=${API.CALENDARIFIC.COUNTRY}&year=${year}`;
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(
-      `Calendarific API returned ${response.status}: ${response.statusText}`
-    );
+    throw new Error(`Calendarific API returned ${response.status}: ${response.statusText}`);
   }
 
   const data = await response.json();
@@ -29,7 +27,10 @@ const saveHolidays = async (holidays: HolidayData[]) => {
   const updates = holidays.map(async (holiday) => {
     const holidayDate = new Date(holiday.date.iso);
     const expireAt = new Date(holidayDate.getTime() + TIME.ONE_DAY_MS * TTL.HOLIDAYS_DAYS_AFTER);
-    const id = `${holiday.date.iso}-${holiday.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
+    const id = `${holiday.date.iso}-${holiday.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")}`;
 
     await eventsCollection.doc(id).set({
       type: "holiday",

@@ -1,11 +1,11 @@
-import {getFirestore, Timestamp} from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
-import {createHash} from "crypto";
+import { createHash } from "crypto";
 
-import {NewsArticle, SerpApiResponse} from "./model/types";
-import {articleMatchesKeywords} from "./utils/filters";
-import {isValidSerpApiResponse} from "./utils/validators";
-import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
+import { NewsArticle, SerpApiResponse } from "./model/types";
+import { articleMatchesKeywords } from "./utils/filters";
+import { isValidSerpApiResponse } from "./utils/validators";
+import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 type SerpApiNewsResult = {
   title?: string;
@@ -55,9 +55,7 @@ const mapToNewsArticle = (result: SerpApiNewsResult): NewsArticle => {
     description,
     url: result.link || "",
     image_url: typeof result.thumbnail === "string" ? result.thumbnail : null,
-    publishedAt: typeof result.date === "string" && result.date.trim() !== "" ?
-      result.date :
-      new Date().toISOString(),
+    publishedAt: typeof result.date === "string" && result.date.trim() !== "" ? result.date : new Date().toISOString(),
     content: description,
     apiSource: "serpapi",
   };
@@ -85,9 +83,7 @@ export const updateSerpApiNewsUtil = async () => {
     const response = await fetch(`${API.SERP_API.BASE_URL}?${queryParams.toString()}`);
 
     if (!response.ok) {
-      throw new Error(
-        `SerpApi returned ${response.status}: ${response.statusText}`
-      );
+      throw new Error(`SerpApi returned ${response.status}: ${response.statusText}`);
     }
 
     const body: unknown = await response.json();
@@ -107,12 +103,12 @@ export const updateSerpApiNewsUtil = async () => {
       const articleData = rawArticle as SerpApiNewsResult;
 
       if (typeof articleData.title !== "string" || articleData.title.trim() === "") {
-        logger.warn("Skipping article with invalid title from SerpApi", {article: rawArticle});
+        logger.warn("Skipping article with invalid title from SerpApi", { article: rawArticle });
         return;
       }
 
       if (typeof articleData.link !== "string" || articleData.link.trim() === "") {
-        logger.warn("Skipping article with invalid link from SerpApi", {article: rawArticle});
+        logger.warn("Skipping article with invalid link from SerpApi", { article: rawArticle });
         return;
       }
 
@@ -122,9 +118,7 @@ export const updateSerpApiNewsUtil = async () => {
         return;
       }
 
-      article.expireAt = Timestamp.fromMillis(
-        Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
-      );
+      article.expireAt = Timestamp.fromMillis(Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS);
 
       const articleAsString = JSON.stringify({
         title: article.title,
@@ -132,9 +126,7 @@ export const updateSerpApiNewsUtil = async () => {
         apiSource: article.apiSource,
       });
 
-      const md5Hash = createHash("md5")
-        .update(articleAsString)
-        .digest("hex");
+      const md5Hash = createHash("md5").update(articleAsString).digest("hex");
 
       await newsCollection.doc(md5Hash).set(article);
     });

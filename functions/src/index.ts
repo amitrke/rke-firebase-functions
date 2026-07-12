@@ -1,4 +1,4 @@
-import {initializeApp} from "firebase-admin/app";
+import { initializeApp } from "firebase-admin/app";
 import {
   checkFilesBeingUsedFn,
   deleteUnusedFilesFn,
@@ -7,50 +7,38 @@ import {
   onFileCreateFn,
   onFileDeleteFn,
 } from "./files";
-import {updateWeatherUtil} from "./weather";
-import {updateNewsUtil} from "./news";
-import {updateNewsDataIOUtil} from "./newsdataio";
-import {updateSerpApiNewsUtil} from "./serpapi";
-import {updateHolidaysUtil} from "./holidays";
-import {onSchedule} from "firebase-functions/v2/scheduler";
-import {SCHEDULES} from "./config/constants";
+import { updateWeatherUtil } from "./weather";
+import { updateNewsUtil } from "./news";
+import { updateNewsDataIOUtil } from "./newsdataio";
+import { updateSerpApiNewsUtil } from "./serpapi";
+import { updateHolidaysUtil } from "./holidays";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { SCHEDULES } from "./config/constants";
 
 initializeApp();
 
-export const updateWeather = onSchedule(
-  {schedule: SCHEDULES.WEATHER_UPDATE, region: "us-east1"},
-  async () => {
-    await updateWeatherUtil();
-  }
-);
+export const updateWeather = onSchedule({ schedule: SCHEDULES.WEATHER_UPDATE, region: "us-east1" }, async () => {
+  await updateWeatherUtil();
+});
 
-export const updateNews = onSchedule(
-  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
-  async () => {
-    await updateNewsUtil();
-  }
-);
+export const updateNews = onSchedule({ schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" }, async () => {
+  await updateNewsUtil();
+});
 
 export const updateNewsFromNewsDataIO = onSchedule(
-  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
+  { schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" },
   async () => {
     await updateNewsDataIOUtil();
-  }
+  },
 );
 
-export const updateNewsFromSerpApi = onSchedule(
-  {schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1"},
-  async () => {
-    await updateSerpApiNewsUtil();
-  }
-);
+export const updateNewsFromSerpApi = onSchedule({ schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" }, async () => {
+  await updateSerpApiNewsUtil();
+});
 
-export const updateHolidays = onSchedule(
-  {schedule: SCHEDULES.HOLIDAYS_UPDATE, region: "us-east1"},
-  async () => {
-    await updateHolidaysUtil();
-  }
-);
+export const updateHolidays = onSchedule({ schedule: SCHEDULES.HOLIDAYS_UPDATE, region: "us-east1" }, async () => {
+  await updateHolidaysUtil();
+});
 
 // File management functions
 // NOTE: Use fileMaintenanceOrchestrator for production to avoid race conditions

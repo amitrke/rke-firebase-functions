@@ -1,10 +1,9 @@
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
-import {getStorage} from "firebase-admin/storage";
-import {onSchedule} from "firebase-functions/v2/scheduler";
-import {onObjectFinalized, onObjectDeleted} from "firebase-functions/v2/storage";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onObjectFinalized, onObjectDeleted } from "firebase-functions/v2/storage";
 import * as logger from "firebase-functions/logger";
-import {SCHEDULES, COLLECTIONS, STORAGE, FIRESTORE} from "./config/constants";
-
+import { SCHEDULES, COLLECTIONS, STORAGE, FIRESTORE } from "./config/constants";
 
 const imageSizeMap = {
   "200x200": "s",
@@ -19,7 +18,9 @@ const imageSizeMap = {
  * @param {string} filePath - Full file path in Cloud Storage
  * @return {object|null} Parsed file details or null if invalid
  */
-export const parseFilePath = (filePath: string): {
+export const parseFilePath = (
+  filePath: string,
+): {
   userId: string;
   fileName: string;
   imageSize: string;
@@ -27,7 +28,7 @@ export const parseFilePath = (filePath: string): {
 } | null => {
   // Validate input
   if (!filePath || typeof filePath !== "string") {
-    logger.warn("Invalid file path provided", {filePath});
+    logger.warn("Invalid file path provided", { filePath });
     return null;
   }
 
@@ -35,7 +36,7 @@ export const parseFilePath = (filePath: string): {
 
   // Expected: users/{userId}/images/{fileName}_{dimensions}.{ext}
   if (pathArray.length < 4 || pathArray[0] !== STORAGE.USERS_PREFIX || pathArray[2] !== STORAGE.IMAGES_FOLDER) {
-    logger.warn("File path doesn't match expected pattern", {filePath});
+    logger.warn("File path doesn't match expected pattern", { filePath });
     return null;
   }
 
@@ -44,13 +45,13 @@ export const parseFilePath = (filePath: string): {
 
   // Validate userId exists
   if (!userId || userId.trim() === "") {
-    logger.warn("Missing or empty userId in file path", {filePath});
+    logger.warn("Missing or empty userId in file path", { filePath });
     return null;
   }
 
   // Validate filename exists
   if (!fileNameWithDim || fileNameWithDim.trim() === "") {
-    logger.warn("Missing or empty filename in file path", {filePath});
+    logger.warn("Missing or empty filename in file path", { filePath });
     return null;
   }
 
@@ -58,7 +59,7 @@ export const parseFilePath = (filePath: string): {
   const dimWithExt = fileNameArray.pop();
 
   if (!dimWithExt) {
-    logger.warn("Missing dimensions in filename", {filePath, fileNameWithDim});
+    logger.warn("Missing dimensions in filename", { filePath, fileNameWithDim });
     return null;
   }
 
@@ -66,7 +67,7 @@ export const parseFilePath = (filePath: string): {
 
   // Should have at least dimension and extension
   if (fileNameExtArray.length < 2) {
-    logger.warn("Missing file extension", {filePath, dimWithExt});
+    logger.warn("Missing file extension", { filePath, dimWithExt });
     return null;
   }
 
@@ -84,7 +85,7 @@ export const parseFilePath = (filePath: string): {
     imageSize = imageSizeMap["1920x1080"];
   }
 
-  return {userId, fileName, imageSize, imageDimensions};
+  return { userId, fileName, imageSize, imageDimensions };
 };
 
 /**
@@ -133,7 +134,7 @@ export const listAndInsertFilesUtil = async () => {
       for (const file of batchFiles) {
         const docRef = filesCollection.doc(file.id);
         // Use set with merge to avoid reading first - will create if doesn't exist
-        batch.set(docRef, file, {merge: true});
+        batch.set(docRef, file, { merge: true });
       }
 
       await batch.commit();
@@ -150,7 +151,7 @@ export const listAndInsertFilesUtil = async () => {
   }
 };
 
-export const listAndInsertFiles = onSchedule({schedule: SCHEDULES.FILE_SYNC, region: "us-east1"}, async () => {
+export const listAndInsertFiles = onSchedule({ schedule: SCHEDULES.FILE_SYNC, region: "us-east1" }, async () => {
   return listAndInsertFilesUtil();
 });
 
@@ -174,14 +175,12 @@ export const parsePosts = (posts: any, userFiles: any) => {
         userFileList.push(...postFiles);
       }
     }
-    logger.info(
-      "userFiles interim", JSON.stringify(userFiles));
+    logger.info("userFiles interim", JSON.stringify(userFiles));
   }
 };
 
 export const fileBeingUsed = (file: any, userFiles: any) => {
-  if (userFiles[file.userId] &&
-    userFiles[file.userId].includes(file.fileName)) {
+  if (userFiles[file.userId] && userFiles[file.userId].includes(file.fileName)) {
     return true;
   } else {
     return false;
@@ -230,8 +229,7 @@ export const checkFilesBeingUsedUtil = async () => {
       }
     }
 
-    logger.info(
-      "userFiles", JSON.stringify(userFiles));
+    logger.info("userFiles", JSON.stringify(userFiles));
 
     const filesCollection = getFirestore().collection(COLLECTIONS.FILES);
     const files = await filesCollection.get();
@@ -240,8 +238,7 @@ export const checkFilesBeingUsedUtil = async () => {
     for (const file of files.docs) {
       const imageDetails = file.data();
       imageDetails.isBeingUsed = fileBeingUsed(imageDetails, userFiles);
-      logger.info(
-        "imageDetails", JSON.stringify(imageDetails));
+      logger.info("imageDetails", JSON.stringify(imageDetails));
       processedFiles.push(imageDetails);
     }
 
@@ -271,15 +268,15 @@ export const checkFilesBeingUsedUtil = async () => {
 };
 
 export const checkFilesBeingUsedFn = onSchedule(
-  {schedule: SCHEDULES.FILE_USAGE_CHECK, region: "us-east1"},
+  { schedule: SCHEDULES.FILE_USAGE_CHECK, region: "us-east1" },
   async () => {
     return checkFilesBeingUsedUtil();
-  }
+  },
 );
 
 // imagDetails: {userId: string, fileName: string, imageSize: string} to fileName with path
 export const getFilePath = (imageDetails: any) => {
-  const {userId, fileName, imageDimensions} = imageDetails;
+  const { userId, fileName, imageDimensions } = imageDetails;
   const fileNameArray = fileName.split(".");
   const fileExtension = fileNameArray.pop();
   const baseName = fileNameArray[0];
@@ -306,7 +303,7 @@ export const deleteUnusedFilesUtil = async () => {
     const deleteFiles = files.docs.map(async (file) => {
       const imageDetails = file.data();
       const filePath = getFilePath(imageDetails);
-      logger.info("Deleting file", {filePath});
+      logger.info("Deleting file", { filePath });
       try {
         await bucket.file(filePath).delete();
       } catch (error) {
@@ -328,7 +325,7 @@ export const deleteUnusedFilesUtil = async () => {
   }
 };
 
-export const deleteUnusedFilesFn = onSchedule({schedule: SCHEDULES.FILE_CLEANUP, region: "us-east1"}, async () => {
+export const deleteUnusedFilesFn = onSchedule({ schedule: SCHEDULES.FILE_CLEANUP, region: "us-east1" }, async () => {
   return deleteUnusedFilesUtil();
 });
 
@@ -337,7 +334,7 @@ export const deleteUnusedFilesFn = onSchedule({schedule: SCHEDULES.FILE_CLEANUP,
  * Runs all file maintenance tasks in the correct order to prevent race conditions
  */
 export const fileMaintenanceOrchestrator = onSchedule(
-  {schedule: SCHEDULES.FILE_MAINTENANCE, region: "us-east1"},
+  { schedule: SCHEDULES.FILE_MAINTENANCE, region: "us-east1" },
   async () => {
     try {
       logger.info("Starting file maintenance orchestration");
@@ -362,7 +359,7 @@ export const fileMaintenanceOrchestrator = onSchedule(
       });
       throw error;
     }
-  }
+  },
 );
 
 const addFileToDb = async (filePath: string) => {
@@ -376,7 +373,7 @@ const addFileToDb = async (filePath: string) => {
   });
 };
 
-export const onFileCreateFn = onObjectFinalized({region: "us-east1"}, async ({data}) => {
+export const onFileCreateFn = onObjectFinalized({ region: "us-east1" }, async ({ data }) => {
   const fileBucket = data.bucket;
   if (!data.name) return;
   const filePath = data.name;
@@ -397,7 +394,7 @@ const deleteFileFromDb = async (filePath: string) => {
   await filesCollection.doc(id).delete();
 };
 
-export const onFileDeleteFn = onObjectDeleted({region: "us-east1"}, async ({data}) => {
+export const onFileDeleteFn = onObjectDeleted({ region: "us-east1" }, async ({ data }) => {
   if (!data.name) return;
   const filePath: string = data.name;
   console.log(`File ${filePath} deleted.`);
