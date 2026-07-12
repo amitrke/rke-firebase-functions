@@ -1,140 +1,140 @@
-import type {Timestamp} from "firebase-admin/firestore";
+import type { Timestamp } from "firebase-admin/firestore";
 
 export interface NewsArticle {
   source: {
     id: string | null;
     name: string;
   };
-    source_id?: string | null;
+  source_id?: string | null;
   author: string | null;
   title: string;
-    description: string | null;
+  description: string | null;
   url: string;
   image_url: string | null;
   publishedAt: string;
-    content: string | null;
-    apiSource: "newsapi" | "newsdata.io" | "serpapi";
+  content: string | null;
+  apiSource: "newsapi" | "newsdata.io" | "serpapi";
   expireAt?: Timestamp;
 }
 
 export interface NewsApiResponse {
-    status: "ok";
-    articles: Record<string, unknown>[];
+  status: "ok";
+  articles: Record<string, unknown>[];
 }
 
 export interface NewsDataIoResponse {
-    status: "success";
-    results: Record<string, unknown>[];
+  status: "success";
+  results: Record<string, unknown>[];
 }
 
 export interface SerpApiResponse {
-    news_results: Record<string, unknown>[];
+  news_results: Record<string, unknown>[];
 }
 
 export interface HolidayData {
-    name: string;
-    description: string;
-    date: {
-        iso: string;
-    };
-    type: string[];
-    locations: string;
-    states: string;
-    canonical_url: string;
+  name: string;
+  description: string;
+  date: {
+    iso: string;
+  };
+  type: string[];
+  locations: string;
+  states: string;
+  canonical_url: string;
 }
 
 export interface HolidaysResponse {
-    response: {
-        holidays: HolidayData[];
-    };
+  response: {
+    holidays: HolidayData[];
+  };
 }
 
 export interface Weather {
-    lat: number;
-    lon: number;
-    timezone: string;
-    timezone_offset: number;
-    current: Current;
-    minutely?: (MinutelyEntity)[] | null;
-    hourly?: (HourlyEntity)[] | null;
-    daily?: (DailyEntity)[] | null;
-    alerts?: (AlertsEntity)[] | null;
+  lat: number;
+  lon: number;
+  timezone: string;
+  timezone_offset: number;
+  current: Current;
+  minutely?: MinutelyEntity[] | null;
+  hourly?: HourlyEntity[] | null;
+  daily?: DailyEntity[] | null;
+  alerts?: AlertsEntity[] | null;
 }
 export interface Current {
-    dt: number;
-    sunrise: number;
-    sunset: number;
-    temp: number;
-    feels_like: number;
-    pressure: number;
-    humidity: number;
-    dew_point: number;
-    uvi: number;
-    clouds: number;
-    visibility: number;
-    wind_speed: number;
-    wind_deg: number;
-    weather?: (WeatherEntity)[] | null;
+  dt: number;
+  sunrise: number;
+  sunset: number;
+  temp: number;
+  feels_like: number;
+  pressure: number;
+  humidity: number;
+  dew_point: number;
+  uvi: number;
+  clouds: number;
+  visibility: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather?: WeatherEntity[] | null;
 }
 export interface WeatherEntity {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
+  id: number;
+  main: string;
+  description: string;
+  icon: string;
 }
 export interface MinutelyEntity {
-    dt: number;
-    precipitation: number;
+  dt: number;
+  precipitation: number;
 }
 export interface HourlyEntity {
-    dt: number;
-    temp: number;
-    feels_like: number;
-    pressure: number;
-    humidity: number;
-    dew_point: number;
-    uvi: number;
-    clouds: number;
-    visibility: number;
-    wind_speed: number;
-    wind_deg: number;
-    weather?: (WeatherEntity)[] | null;
-    pop: number;
+  dt: number;
+  temp: number;
+  feels_like: number;
+  pressure: number;
+  humidity: number;
+  dew_point: number;
+  uvi: number;
+  clouds: number;
+  visibility: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather?: WeatherEntity[] | null;
+  pop: number;
 }
 export interface DailyEntity {
-    dt: number;
-    sunrise: number;
-    sunset: number;
-    temp: Temp;
-    feels_like: FeelsLike;
-    pressure: number;
-    humidity: number;
-    dew_point: number;
-    wind_speed: number;
-    wind_deg: number;
-    weather?: (WeatherEntity)[] | null;
-    clouds: number;
-    pop: number;
-    uvi: number;
+  dt: number;
+  sunrise: number;
+  sunset: number;
+  temp: Temp;
+  feels_like: FeelsLike;
+  pressure: number;
+  humidity: number;
+  dew_point: number;
+  wind_speed: number;
+  wind_deg: number;
+  weather?: WeatherEntity[] | null;
+  clouds: number;
+  pop: number;
+  uvi: number;
 }
 export interface Temp {
-    day: number;
-    min: number;
-    max: number;
-    night: number;
-    eve: number;
-    morn: number;
+  day: number;
+  min: number;
+  max: number;
+  night: number;
+  eve: number;
+  morn: number;
 }
 export interface FeelsLike {
-    day: number;
-    night: number;
-    eve: number;
-morn: number;
+  day: number;
+  night: number;
+  eve: number;
+  morn: number;
 }
 export interface AlertsEntity {
-    sender_name: string;
-    event: string;
-    start: number;
-    end: number;
-    description: string;
+  sender_name: string;
+  event: string;
+  start: number;
+  end: number;
+  description: string;
 }

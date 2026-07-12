@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-explicit-any": "off"
+  },
+  "ignorePatterns": [
+    "lib/**",
+    "tests/**",
+    "jest.config.js",
+    "setupTests.js"
+  ],
+  "env": {
+    "builtin": true
+  }
+}

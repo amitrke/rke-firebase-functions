@@ -1,8 +1,8 @@
-import {Weather} from "./model/types";
-import {getFirestore} from "firebase-admin/firestore";
+import { Weather } from "./model/types";
+import { getFirestore } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
-import {isValidWeatherResponse} from "./utils/validators";
-import {LOCATIONS, API, COLLECTIONS} from "./config/constants";
+import { isValidWeatherResponse } from "./utils/validators";
+import { LOCATIONS, API, COLLECTIONS } from "./config/constants";
 
 export const updateWeatherUtil = async () => {
   try {
@@ -13,17 +13,15 @@ export const updateWeatherUtil = async () => {
       throw new Error("WEATHER_API_KEY environment variable not set");
     }
 
-    const {lat, lon} = LOCATIONS.ROORKEE;
+    const { lat, lon } = LOCATIONS.ROORKEE;
     const response = await fetch(
       `${API.WEATHER.BASE_URL}?lat=${lat}&lon=${lon}` +
-          `&appid=${WEATHER_APPID}` +
-          `&units=${API.WEATHER.UNITS}&exclude=${API.WEATHER.EXCLUDE}`
+        `&appid=${WEATHER_APPID}` +
+        `&units=${API.WEATHER.UNITS}&exclude=${API.WEATHER.EXCLUDE}`,
     );
 
     if (!response.ok) {
-      throw new Error(
-        `Weather API returned ${response.status}: ${response.statusText}`
-      );
+      throw new Error(`Weather API returned ${response.status}: ${response.statusText}`);
     }
 
     const body = await response.json();

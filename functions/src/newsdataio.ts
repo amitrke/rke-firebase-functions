@@ -1,10 +1,10 @@
-import {getFirestore, Timestamp} from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
-import {createHash} from "crypto";
-import {NewsArticle} from "./model/types";
-import {articleMatchesKeywords} from "./utils/filters";
-import {isValidNewsDataIOResponse, isValidNewsDataIOArticle} from "./utils/validators";
-import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
+import { createHash } from "crypto";
+import { NewsArticle } from "./model/types";
+import { articleMatchesKeywords } from "./utils/filters";
+import { isValidNewsDataIOResponse, isValidNewsDataIOArticle } from "./utils/validators";
+import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 const mapToNewsArticle = (articleData: any): NewsArticle => {
   return {
@@ -35,9 +35,7 @@ export const updateNewsDataIOUtil = async () => {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(
-        `NewsData.io API returned ${response.status}: ${response.statusText}`
-      );
+      throw new Error(`NewsData.io API returned ${response.status}: ${response.statusText}`);
     }
 
     const data: any = await response.json();
@@ -51,22 +49,18 @@ export const updateNewsDataIOUtil = async () => {
       for (const articleData of data.results) {
         // Validate article has required fields
         if (!isValidNewsDataIOArticle(articleData)) {
-          logger.warn("Skipping invalid article from NewsData.io", {article: articleData});
+          logger.warn("Skipping invalid article from NewsData.io", { article: articleData });
           continue;
         }
 
         if (articleMatchesKeywords(articleData, KEYWORDS)) {
           const article = mapToNewsArticle(articleData);
-          article.expireAt = Timestamp.fromMillis(
-            Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
-          );
+          article.expireAt = Timestamp.fromMillis(Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS);
           const articleAsString = JSON.stringify({
             title: article.title,
             apiSource: article.apiSource,
           });
-          const md5Hash = createHash("md5")
-            .update(articleAsString)
-            .digest("hex");
+          const md5Hash = createHash("md5").update(articleAsString).digest("hex");
           await newsCollection.doc(md5Hash).set(article);
         }
       }

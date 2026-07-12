@@ -11,8 +11,8 @@ This is a Firebase Functions project for the RKE (Roorkee) platform. The codebas
 ### Build and Lint
 ```bash
 cd functions
-yarn lint           # Run ESLint
-yarn lint:fix       # Fix auto-fixable lint issues
+yarn lint           # Run oxlint + prettier --check
+yarn lint:fix       # Fix auto-fixable lint/format issues
 yarn build          # Compile TypeScript to JavaScript
 yarn build:watch    # Watch mode for development
 ```

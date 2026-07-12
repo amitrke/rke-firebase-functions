@@ -10,7 +10,7 @@
  */
 export const articleMatchesKeywords = (
   article: { title?: string | null; description?: string | null; content?: string | null },
-  keywords: string[]
+  keywords: string[],
 ): boolean => {
   const title = article.title?.toLowerCase() || "";
   const description = article.description?.toLowerCase() || "";
@@ -18,10 +18,6 @@ export const articleMatchesKeywords = (
 
   return keywords.some((keyword) => {
     const lowerKeyword = keyword.toLowerCase();
-    return (
-      title.includes(lowerKeyword) ||
-      description.includes(lowerKeyword) ||
-      content.includes(lowerKeyword)
-    );
+    return title.includes(lowerKeyword) || description.includes(lowerKeyword) || content.includes(lowerKeyword);
   });
 };

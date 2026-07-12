@@ -1,11 +1,11 @@
-import {getFirestore, Timestamp} from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
-import {createHash} from "crypto";
+import { createHash } from "crypto";
 
-import {NewsApiResponse, NewsArticle} from "./model/types";
-import {articleMatchesKeywords} from "./utils/filters";
-import {isValidNewsAPIResponse, isValidArticle} from "./utils/validators";
-import {KEYWORDS, TIME, TTL, API, COLLECTIONS} from "./config/constants";
+import { NewsApiResponse, NewsArticle } from "./model/types";
+import { articleMatchesKeywords } from "./utils/filters";
+import { isValidNewsAPIResponse, isValidArticle } from "./utils/validators";
+import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 export const updateNewsUtil = async () => {
   try {
@@ -18,14 +18,10 @@ export const updateNewsUtil = async () => {
       throw new Error("NEWS_API_KEY environment variable not set");
     }
 
-    const response = await fetch(
-      `${API.NEWS_API.BASE_URL}?q=${API.NEWS_API.QUERY}&apiKey=${NEWS_API_KEY}`
-    );
+    const response = await fetch(`${API.NEWS_API.BASE_URL}?q=${API.NEWS_API.QUERY}&apiKey=${NEWS_API_KEY}`);
 
     if (!response.ok) {
-      throw new Error(
-        `NewsAPI returned ${response.status}: ${response.statusText}`
-      );
+      throw new Error(`NewsAPI returned ${response.status}: ${response.statusText}`);
     }
 
     const body: unknown = await response.json();
@@ -41,7 +37,7 @@ export const updateNewsUtil = async () => {
       const updates = newsData.articles.map(async (articleData) => {
         // Validate article has required fields
         if (!isValidArticle(articleData)) {
-          logger.warn("Skipping invalid article", {article: articleData});
+          logger.warn("Skipping invalid article", { article: articleData });
           return;
         }
 
@@ -59,18 +55,14 @@ export const updateNewsUtil = async () => {
             publishedAt: articleData.publishedAt,
             content: typeof articleData.content === "string" ? articleData.content : null,
             apiSource: "newsapi",
-            expireAt: Timestamp.fromMillis(
-              Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS
-            ),
+            expireAt: Timestamp.fromMillis(Date.now() + TIME.ONE_DAY_MS * TTL.NEWS_ARTICLES_DAYS),
           };
 
           const articleAsString = JSON.stringify({
             title: article.title,
             apiSource: article.apiSource,
           });
-          const md5Hash = createHash("md5")
-            .update(articleAsString)
-            .digest("hex");
+          const md5Hash = createHash("md5").update(articleAsString).digest("hex");
           await newsCollection.doc(md5Hash).set(article);
         }
       });
