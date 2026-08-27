@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 import { NewsApiResponse, NewsArticle } from "./model/types";
 import { articleMatchesKeywords } from "./utils/filters";
 import { isValidNewsAPIResponse, isValidArticle } from "./utils/validators";
-import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
+import { KEYWORDS, EXCLUDE_KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 export const updateNewsUtil = async () => {
   try {
@@ -38,6 +38,11 @@ export const updateNewsUtil = async () => {
         // Validate article has required fields
         if (!isValidArticle(articleData)) {
           logger.warn("Skipping invalid article", { article: articleData });
+          return;
+        }
+
+        if (articleMatchesKeywords(articleData, EXCLUDE_KEYWORDS)) {
+          logger.info("Skipping ad-like article", { title: articleData.title });
           return;
         }
 

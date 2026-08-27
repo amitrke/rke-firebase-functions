@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 import { NewsArticle, SerpApiResponse } from "./model/types";
 import { articleMatchesKeywords } from "./utils/filters";
 import { isValidSerpApiResponse } from "./utils/validators";
-import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
+import { KEYWORDS, EXCLUDE_KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 type SerpApiNewsResult = {
   title?: string;
@@ -113,6 +113,11 @@ export const updateSerpApiNewsUtil = async () => {
       }
 
       const article = mapToNewsArticle(articleData);
+
+      if (articleMatchesKeywords(article, EXCLUDE_KEYWORDS)) {
+        logger.info("Skipping ad-like article from SerpApi", { title: article.title });
+        return;
+      }
 
       if (!articleMatchesKeywords(article, KEYWORDS)) {
         return;

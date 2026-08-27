@@ -78,6 +78,12 @@ export const LOCATIONS = {
 export const KEYWORDS = ["roorkee"];
 
 /**
+ * Articles matching any of these are dropped even if they match KEYWORDS.
+ * Targets templated vehicle-pricing spam (e.g. "Maruti Suzuki Baleno On Road Price Roorkee Aug 2026 - ₹7.22L").
+ */
+export const EXCLUDE_KEYWORDS = ["on road price", "on-road price", "onroad price", "ex-showroom price"];
+
+/**
  * Firestore collection names
  */
 export const COLLECTIONS = {
