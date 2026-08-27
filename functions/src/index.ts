@@ -1,12 +1,5 @@
 import { initializeApp } from "firebase-admin/app";
-import {
-  checkFilesBeingUsedFn,
-  deleteUnusedFilesFn,
-  listAndInsertFiles,
-  fileMaintenanceOrchestrator,
-  onFileCreateFn,
-  onFileDeleteFn,
-} from "./files";
+import { fileMaintenanceOrchestrator, onFileCreateFn, onFileDeleteFn } from "./files";
 import { updateWeatherUtil } from "./weather";
 import { updateNewsUtil } from "./news";
 import { updateNewsDataIOUtil } from "./newsdataio";
@@ -14,6 +7,7 @@ import { updateSerpApiNewsUtil } from "./serpapi";
 import { updateHolidaysUtil } from "./holidays";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { SCHEDULES } from "./config/constants";
+import * as logger from "firebase-functions/logger";
 
 initializeApp();
 
@@ -21,33 +15,22 @@ export const updateWeather = onSchedule({ schedule: SCHEDULES.WEATHER_UPDATE, re
   await updateWeatherUtil();
 });
 
+// Each source is independent - one failing shouldn't stop the others from running
 export const updateNews = onSchedule({ schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" }, async () => {
-  await updateNewsUtil();
-});
-
-export const updateNewsFromNewsDataIO = onSchedule(
-  { schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" },
-  async () => {
-    await updateNewsDataIOUtil();
-  },
-);
-
-export const updateNewsFromSerpApi = onSchedule({ schedule: SCHEDULES.NEWS_UPDATE, region: "us-east1" }, async () => {
-  await updateSerpApiNewsUtil();
+  const results = await Promise.allSettled([updateNewsUtil(), updateNewsDataIOUtil(), updateSerpApiNewsUtil()]);
+  const failures = results.filter((r): r is PromiseRejectedResult => r.status === "rejected");
+  if (failures.length > 0) {
+    logger.error(`${failures.length}/${results.length} news sources failed`, {
+      errors: failures.map((f) => (f.reason instanceof Error ? f.reason.message : String(f.reason))),
+    });
+  }
 });
 
 export const updateHolidays = onSchedule({ schedule: SCHEDULES.HOLIDAYS_UPDATE, region: "us-east1" }, async () => {
   await updateHolidaysUtil();
 });
 
-// File management functions
-// NOTE: Use fileMaintenanceOrchestrator for production to avoid race conditions
-// The individual functions below are kept for backwards compatibility and testing
-export const updateFilesList = listAndInsertFiles;
-export const checkFilesBeingUsed = checkFilesBeingUsedFn;
-export const deleteUnusedFiles = deleteUnusedFilesFn;
-
-// Recommended: Use this orchestrator instead of the individual functions above
+// File management: fileMaintenanceOrchestrator runs sync -> usage check -> cleanup in order
 export const fileMaintenance = fileMaintenanceOrchestrator;
 
 // Cloud Storage triggers
