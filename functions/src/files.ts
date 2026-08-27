@@ -151,10 +151,6 @@ export const listAndInsertFilesUtil = async () => {
   }
 };
 
-export const listAndInsertFiles = onSchedule({ schedule: SCHEDULES.FILE_SYNC, region: "us-east1" }, async () => {
-  return listAndInsertFilesUtil();
-});
-
 export const parsePosts = (posts: any, userFiles: any) => {
   for (const post of posts) {
     const postFiles: Array<string> = post.data().images;
@@ -267,13 +263,6 @@ export const checkFilesBeingUsedUtil = async () => {
   }
 };
 
-export const checkFilesBeingUsedFn = onSchedule(
-  { schedule: SCHEDULES.FILE_USAGE_CHECK, region: "us-east1" },
-  async () => {
-    return checkFilesBeingUsedUtil();
-  },
-);
-
 // imagDetails: {userId: string, fileName: string, imageSize: string} to fileName with path
 export const getFilePath = (imageDetails: any) => {
   const { userId, fileName, imageDimensions } = imageDetails;
@@ -324,10 +313,6 @@ export const deleteUnusedFilesUtil = async () => {
     throw error;
   }
 };
-
-export const deleteUnusedFilesFn = onSchedule({ schedule: SCHEDULES.FILE_CLEANUP, region: "us-east1" }, async () => {
-  return deleteUnusedFilesUtil();
-});
 
 /**
  * File Maintenance Orchestrator

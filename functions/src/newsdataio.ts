@@ -4,7 +4,7 @@ import { createHash } from "crypto";
 import { NewsArticle } from "./model/types";
 import { articleMatchesKeywords } from "./utils/filters";
 import { isValidNewsDataIOResponse, isValidNewsDataIOArticle } from "./utils/validators";
-import { KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
+import { KEYWORDS, EXCLUDE_KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
 const mapToNewsArticle = (articleData: any): NewsArticle => {
   return {
@@ -50,6 +50,11 @@ export const updateNewsDataIOUtil = async () => {
         // Validate article has required fields
         if (!isValidNewsDataIOArticle(articleData)) {
           logger.warn("Skipping invalid article from NewsData.io", { article: articleData });
+          continue;
+        }
+
+        if (articleMatchesKeywords(articleData, EXCLUDE_KEYWORDS)) {
+          logger.warn("Skipping ad-like article from NewsData.io", { title: articleData.title });
           continue;
         }
 
