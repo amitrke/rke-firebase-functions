@@ -3567,10 +3567,10 @@ firebase-functions@^7.3.2:
     express "^5.2.1"
     protobufjs "^7.2.2"
 
-firebase-tools@^15.23.0:
-  version "15.23.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.23.0.tgz#6023078b9e1974c3f2fdc0c02e084cfe105ef082"
-  integrity sha512-YIu1w84GiJAoQfCDBvrK77Qnu19sh00YufGvrWLc9kus9p8j5NkFOGfSpIAiEHu5VliTZUqBhqDwA/i7fuN0GQ==
+firebase-tools@^15.26.0:
+  version "15.26.0"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.26.0.tgz#5b5ffa7039cfbd9e4ac94180ae26425e41675703"
+  integrity sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==
   dependencies:
     "@apphosting/common" "^0.0.8"
     "@electric-sql/pglite" "^0.3.3"
@@ -3639,7 +3639,7 @@ firebase-tools@^15.23.0:
     update-notifier-cjs "^5.1.6"
     winston "^3.0.0"
     winston-transport "^4.4.0"
-    ws "^7.5.10"
+    ws "^8.21.1"
     yaml "^2.8.3"
     zod "^4.0.0"
 
@@ -7267,10 +7267,10 @@ write-file-atomic@^5.0.1:
     imurmurhash "^0.1.4"
     signal-exit "^4.0.1"
 
-ws@^7.5.10:
-  version "7.5.11"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.11.tgz#9460daf1812bb81a423c5b9eac746941a86310fa"
-  integrity "sha1-lGDa8YEruBpCPFuerHRpQahjEPo= sha512-zS54Oen9bITtp7kp2XM3AydrCIq1D+HwJOuH+c+e4LfpL/lotP5osijd+UoMnxwAam1GN8R4KtLAyIrIcBNpiA=="
+ws@^8.21.1:
+  version "8.21.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.3.tgz#660b4faddb6a3e575c86e078126919961f4de4fc"
+  integrity sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==
 
 xdg-basedir@^4.0.0:
   version "4.0.0"
