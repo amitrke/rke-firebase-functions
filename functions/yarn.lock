@@ -3567,10 +3567,10 @@ firebase-functions@^7.3.2:
     express "^5.2.1"
     protobufjs "^7.2.2"
 
-firebase-tools@^15.26.0:
-  version "15.26.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.26.0.tgz#5b5ffa7039cfbd9e4ac94180ae26425e41675703"
-  integrity sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==
+firebase-tools@^15.28.1:
+  version "15.28.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-15.28.1.tgz#a21b3e9936cf56832d55efaf02a3e0bde08491b7"
+  integrity sha512-5qbKmO0Am0++a335zzUe9/TFdM/dn6jGNKVp2JUcHwDrOK+5wU0LT/fGX+8rjQM8AwfzPp+eMowWX1uDGI+aQg==
   dependencies:
     "@apphosting/common" "^0.0.8"
     "@electric-sql/pglite" "^0.3.3"
