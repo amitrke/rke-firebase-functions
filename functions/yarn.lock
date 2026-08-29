@@ -514,10 +514,10 @@
     google-auth-library "^10.0.0"
     p-throttle "^7.0.0"
 
-"@google-cloud/firestore@^8.6.0":
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-8.6.0.tgz#892a081c9c70efc1bb37a625eb6f3085f3a1002b"
-  integrity sha512-TdvZHfwQj5B5CSDEgDqyrhdVqtOSupmBXDQPasMAJiC64tjsGvyMooNiC43fdk1TsUHeklyoZ6/vQ1TjWKVMbg==
+"@google-cloud/firestore@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-8.7.1.tgz#bba0b35af840a3843898efee786dd03e1cbe7b72"
+  integrity sha512-Hp/WI8sH569ANitsko6RNvCUkzTCYudHoINOkQjiJq2FBG6kKnofBAW7PtS823cu6RMxHqK2RxRcspdjrRpUFA==
   dependencies:
     "@opentelemetry/api" "^1.9.0"
     fast-deep-equal "^3.1.3"
@@ -586,10 +586,10 @@
     lodash.snakecase "^4.1.1"
     p-defer "^3.0.0"
 
-"@google-cloud/storage@^7.19.0":
-  version "7.21.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/storage/-/storage-7.21.0.tgz#46b89afbdc3014e18b60afdfba5d9212a23e7b58"
-  integrity sha512-l+IFTkd+6Y5LoAuXyYCKNAKtw/Ci+rAMqgdTB1jv4iZiLhw0rtq+0qjIRbBizXkNzEFmXiXUW0H7sZQQvk1ffA==
+"@google-cloud/storage@^7.22.0":
+  version "7.22.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/storage/-/storage-7.22.0.tgz#57ea83962c50f5c6f29ebc433bd7eb5a37199ba2"
+  integrity sha512-W98gTQOAntEeEQ7/pZxSQXxfUO5CiQcXJRsxBpUa6UU25n8YN/VtogPBi0H+MAmUrn/6bY/sBhFansoWEsr2/g==
   dependencies:
     "@google-cloud/paginator" "^5.0.0"
     "@google-cloud/projectify" "^4.0.0"
@@ -3531,10 +3531,10 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase-admin@^14.2.0:
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-14.2.0.tgz#e9f2688c8940b7fb6dd8eb5dd4dd6a2577b71c87"
-  integrity sha512-zfs5PdccEgjX479bbMmz95Rqc7ttQ4LV3qkGFlPiqOaOu/suBZc3fG52Qzn2hQjiSHkBM4NP2AZV5r2NvAt0TQ==
+firebase-admin@^14.3.0:
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-14.3.0.tgz#42b36fa0c83c55fd2bc806a9855c5550be365f77"
+  integrity sha512-FUxr5HI9C0RNJW3B+CKyJOnIt5uXn/XHheyCECVTLQGSJ/MaE1Zcwf+dCaaG+xx0+VX1A4sZ1t+hc35bu73dVw==
   dependencies:
     "@fastify/busboy" "^3.0.0"
     "@firebase/database-compat" "^2.1.4"
@@ -3544,8 +3544,8 @@ firebase-admin@^14.2.0:
     jsonwebtoken "^9.0.0"
     jwks-rsa "^4.0.1"
   optionalDependencies:
-    "@google-cloud/firestore" "^8.6.0"
-    "@google-cloud/storage" "^7.19.0"
+    "@google-cloud/firestore" "^8.7.1"
+    "@google-cloud/storage" "^7.22.0"
 
 firebase-functions-test@^3.5.0:
   version "3.5.0"
