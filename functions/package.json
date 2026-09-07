@@ -35,7 +35,7 @@
     "oxlint": "^1.81.0",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2",
-    "yarn-audit-fix": "^10.1.1"
+    "yarn-audit-fix": "^11.0.2"
   },
   "resolutions": {
     "minimatch": "^5.1.8",
