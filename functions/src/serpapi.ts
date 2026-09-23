@@ -4,6 +4,7 @@ import { createHash } from "crypto";
 
 import { NewsArticle, SerpApiResponse } from "./model/types";
 import { articleMatchesKeywords } from "./utils/filters";
+import { saveNewsArticleIfNew } from "./utils/newsStore";
 import { isValidSerpApiResponse } from "./utils/validators";
 import { KEYWORDS, EXCLUDE_KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
@@ -133,7 +134,7 @@ export const updateSerpApiNewsUtil = async () => {
 
       const md5Hash = createHash("md5").update(articleAsString).digest("hex");
 
-      await newsCollection.doc(md5Hash).set(article);
+      await saveNewsArticleIfNew(newsCollection.doc(md5Hash), article);
     });
 
     await Promise.all(updates);
