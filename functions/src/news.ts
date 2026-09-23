@@ -4,6 +4,7 @@ import { createHash } from "crypto";
 
 import { NewsApiResponse, NewsArticle } from "./model/types";
 import { articleMatchesKeywords } from "./utils/filters";
+import { saveNewsArticleIfNew } from "./utils/newsStore";
 import { isValidNewsAPIResponse, isValidArticle } from "./utils/validators";
 import { KEYWORDS, EXCLUDE_KEYWORDS, TIME, TTL, API, COLLECTIONS } from "./config/constants";
 
@@ -68,7 +69,7 @@ export const updateNewsUtil = async () => {
             apiSource: article.apiSource,
           });
           const md5Hash = createHash("md5").update(articleAsString).digest("hex");
-          await newsCollection.doc(md5Hash).set(article);
+          await saveNewsArticleIfNew(newsCollection.doc(md5Hash), article);
         }
       });
 
