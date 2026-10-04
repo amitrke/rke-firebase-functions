@@ -20,22 +20,22 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/node-fetch": "^2.6.13",
-    "firebase-admin": "^14.3.0",
-    "firebase-functions": "^7.3.2",
+    "firebase-admin": "^14.5.0",
+    "firebase-functions": "^7.4.0",
     "node-fetch": "3.3.2"
   },
   "devDependencies": {
-    "@swc/core": "^1.16.1",
+    "@swc/core": "^1.16.2",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.3",
     "firebase-functions-test": "^3.5.0",
-    "firebase-tools": "^15.28.2",
-    "jest": "^30.5.1",
-    "oxlint": "^1.81.0",
+    "firebase-tools": "^15.29.0",
+    "jest": "^30.5.2",
+    "oxlint": "^1.86.0",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2",
-    "yarn-audit-fix": "^11.0.2"
+    "yarn-audit-fix": "^11.0.4"
   },
   "resolutions": {
     "minimatch": "^5.1.8",
