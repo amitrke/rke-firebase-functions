@@ -33,7 +33,7 @@
     "firebase-tools": "^15.29.0",
     "jest": "^30.5.2",
     "oxlint": "^1.86.0",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.9",
     "typescript": "^7.0.2",
     "yarn-audit-fix": "^11.0.4"
   },
