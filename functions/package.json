@@ -30,7 +30,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.3",
     "firebase-functions-test": "^3.5.0",
-    "firebase-tools": "^15.29.0",
+    "firebase-tools": "^15.32.1",
     "jest": "^30.5.2",
     "oxlint": "^1.86.0",
     "prettier": "^3.9.9",
