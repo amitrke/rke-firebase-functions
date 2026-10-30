@@ -1,4 +1,5 @@
-import { Weather } from "./model/types";
+import { WeatherDocument } from "./model/types";
+import { fetchAirQuality } from "./airquality";
 import { getFirestore } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { isValidWeatherResponse } from "./utils/validators";
@@ -31,12 +32,18 @@ export const updateWeatherUtil = async () => {
       throw new Error("Invalid weather data received from API");
     }
 
-    const weatherData: Weather = body;
+    // Fetched in the same run (no extra scheduled job). Null when the air
+    // pollution API is down; the weather is still written.
+    const airQuality = await fetchAirQuality(lat, lon, WEATHER_APPID);
+    const weatherData: WeatherDocument = airQuality ? { ...body, airQuality } : body;
 
     const weatherCollection = getFirestore().collection(COLLECTIONS.WEATHER);
     await weatherCollection.doc(LOCATIONS.ROORKEE.name).set(weatherData);
 
-    logger.info("Weather updated successfully");
+    logger.info("Weather updated successfully", {
+      aqi: airQuality?.aqi ?? null,
+      aqiBasis: airQuality?.basis ?? null,
+    });
   } catch (error) {
     logger.error("Error updating weather", {
       error: error instanceof Error ? error.message : String(error),

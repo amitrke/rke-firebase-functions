@@ -25,17 +25,17 @@
     "node-fetch": "3.3.2"
   },
   "devDependencies": {
-    "@swc/core": "^1.16.2",
+    "@swc/core": "^1.16.18",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.5",
     "firebase-functions-test": "^3.5.0",
-    "firebase-tools": "^15.29.0",
+    "firebase-tools": "^15.34.0",
     "jest": "^30.5.2",
-    "oxlint": "^1.86.0",
-    "prettier": "^3.9.6",
+    "oxlint": "^1.89.0",
+    "prettier": "^3.9.10",
     "typescript": "^7.0.2",
-    "yarn-audit-fix": "^11.0.4"
+    "yarn-audit-fix": "^11.1.0"
   },
   "resolutions": {
     "minimatch": "^5.1.8",

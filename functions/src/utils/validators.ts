@@ -2,7 +2,14 @@
  * Validation utilities for API responses and data structures
  */
 
-import { HolidaysResponse, NewsApiResponse, NewsDataIoResponse, SerpApiResponse, Weather } from "../model/types";
+import {
+  AirPollutionResponse,
+  HolidaysResponse,
+  NewsApiResponse,
+  NewsDataIoResponse,
+  SerpApiResponse,
+  Weather,
+} from "../model/types";
 
 type ValidArticle = {
   title: string;
@@ -36,6 +43,28 @@ export const isValidWeatherResponse = (data: any): data is Weather => {
     typeof data.current === "object" &&
     typeof data.current.temp === "number" &&
     typeof data.current.dt === "number"
+  );
+};
+
+/**
+ * Check if an OpenWeatherMap Air Pollution response is valid
+ * @param {any} data - Response data to validate
+ * @return {boolean} True if it holds at least one reading with PM values
+ */
+export const isValidAirPollutionResponse = (data: any): data is AirPollutionResponse => {
+  return (
+    data &&
+    typeof data === "object" &&
+    Array.isArray(data.list) &&
+    data.list.length > 0 &&
+    data.list.every(
+      (entry: any) =>
+        entry &&
+        typeof entry.dt === "number" &&
+        entry.components &&
+        typeof entry.components.pm2_5 === "number" &&
+        typeof entry.components.pm10 === "number",
+    )
   );
 };
 

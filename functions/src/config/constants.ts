@@ -119,6 +119,11 @@ export const API = {
     EXCLUDE: "minutely",
     UNITS: "metric",
   },
+  // Same key as WEATHER; free on every OpenWeatherMap plan.
+  AIR_POLLUTION: {
+    CURRENT_URL: "http://api.openweathermap.org/data/2.5/air_pollution",
+    HISTORY_URL: "http://api.openweathermap.org/data/2.5/air_pollution/history",
+  },
   NEWS_API: {
     BASE_URL: "https://newsapi.org/v2/everything",
     QUERY: "Roorkee",
