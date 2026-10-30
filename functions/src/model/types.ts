@@ -60,6 +60,55 @@ export interface Weather {
   daily?: DailyEntity[] | null;
   alerts?: AlertsEntity[] | null;
 }
+
+/** Pollutant concentrations as OpenWeatherMap reports them, all in µg/m³. */
+export interface AirComponents {
+  co: number;
+  no: number;
+  no2: number;
+  o3: number;
+  so2: number;
+  pm2_5: number;
+  pm10: number;
+  nh3: number;
+}
+
+export interface AirPollutionEntry {
+  dt: number;
+  main: { aqi: number };
+  components: AirComponents;
+}
+
+export interface AirPollutionResponse {
+  coord: { lon: number; lat: number };
+  list: AirPollutionEntry[];
+}
+
+export type NaqiPollutant = "pm2_5" | "pm10" | "no2" | "o3" | "co" | "so2" | "nh3";
+
+export type NaqiCategory = "Good" | "Satisfactory" | "Moderate" | "Poor" | "Very Poor" | "Severe";
+
+/** Stored as `airQuality` on the weather document. */
+export interface AirQuality {
+  /** Unix seconds of the latest reading. */
+  dt: number;
+  /** India's National AQI (CPCB), 0–500. */
+  aqi: number;
+  category: NaqiCategory;
+  /** The pollutant whose sub-index set the AQI. */
+  dominantPollutant: NaqiPollutant;
+  subIndices: Partial<Record<NaqiPollutant, number>>;
+  /** "24h" when built from the last day's readings, "current" when history was unavailable. */
+  basis: "24h" | "current";
+  /** OpenWeatherMap's own 1–5 index, kept for reference. */
+  owmIndex: number;
+  /** Latest concentrations, µg/m³. */
+  components: AirComponents;
+}
+
+export interface WeatherDocument extends Weather {
+  airQuality?: AirQuality;
+}
 export interface Current {
   dt: number;
   sunrise: number;
