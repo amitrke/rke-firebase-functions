@@ -345,15 +345,15 @@
     tslib "^2.1.0"
 
 "@firebase/database-compat@^2.1.4":
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/@firebase/database-compat/-/database-compat-2.1.8.tgz#88ea6d12139348991c95ac09cd0bf7cce730acc5"
-  integrity sha512-wCMI122co2+rbldcZALIgmFoVn0Pj+PAuCjo0zvppMaPm/ksmK9twpmGCrmbUVjqe6xRs0YkCrKlblNujG2cpQ==
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@firebase/database-compat/-/database-compat-2.1.4.tgz#8ea753bef91d2dfbd81853479799f3ab17ddbbbe"
+  integrity sha512-3pK35F1MAgmqFJQlf2nhQl44vtAXQO1uaCaQOEUI9kCRtLFqi7N+QRKR7lFZPg+xIZIyubgxQaxY69YgfZRZWg==
   dependencies:
-    "@firebase/component" "0.7.5"
-    "@firebase/database" "1.1.6"
-    "@firebase/database-types" "1.0.22"
-    "@firebase/logger" "0.5.2"
-    "@firebase/util" "1.15.3"
+    "@firebase/component" "0.7.3"
+    "@firebase/database" "1.1.3"
+    "@firebase/database-types" "1.0.20"
+    "@firebase/logger" "0.5.1"
+    "@firebase/util" "1.15.1"
     tslib "^2.1.0"
 
 "@firebase/database-types@1.0.22", "@firebase/database-types@^1.0.20":
@@ -364,16 +364,16 @@
     "@firebase/app-types" "0.9.6"
     "@firebase/util" "1.15.3"
 
-"@firebase/database@1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@firebase/database/-/database-1.1.6.tgz#8fd2f79e4e455e89c6ce0eca49e5d5821cbcc1e1"
-  integrity sha512-nPktjjCWA9TSJUc0KtStBRugI6AF1b53qOlDvXkHtueIBt1sOhPzCT7S2gtxrs07S9jGA2o7J5faEa/PFAXomg==
+"@firebase/database@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@firebase/database/-/database-1.1.3.tgz#ae3b1c906c45d70381359e61b4add6fc4beaa51e"
+  integrity sha512-XwWCa+E4TvNGpGwXrycLRNfdogADwFcvuhyow6wDWma9W54roaQIhe+4PM0KiLsIftBdSCGI7OKCXrdSRHbIhw==
   dependencies:
-    "@firebase/app-check-interop-types" "0.3.5"
-    "@firebase/auth-interop-types" "0.2.6"
-    "@firebase/component" "0.7.5"
-    "@firebase/logger" "0.5.2"
-    "@firebase/util" "1.15.3"
+    "@firebase/app-check-interop-types" "0.3.4"
+    "@firebase/auth-interop-types" "0.2.5"
+    "@firebase/component" "0.7.3"
+    "@firebase/logger" "0.5.1"
+    "@firebase/util" "1.15.1"
     faye-websocket "0.11.4"
     tslib "^2.1.0"
 
